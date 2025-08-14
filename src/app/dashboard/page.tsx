@@ -14,6 +14,7 @@ import JourneyLineChart from '../components/JourneyLineChart';
 import SkillMixDonut from '../components/SkillMixDonut';
 import EventHistory from '../components/EventHistory';
 
+
 export default function DashboardPage() {
   const { user, loading } = useFirebase();
   const router = useRouter();
@@ -103,7 +104,9 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Row D - Event History */}
+
+
+              {/* Row E - Event History */}
               <div className="mb-6">
                 <EventHistory 
                   items={[

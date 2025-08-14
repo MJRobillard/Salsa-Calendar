@@ -67,8 +67,17 @@ export default function HomePage() {
         {/* Public Calendar Placeholder */}
         <div className="bg-brand-charcoal p-8 rounded-xl2 shadow-card border border-brand-maroon">
           <h2 className="text-2xl font-semibold text-brand-gold mb-4">Upcoming Events</h2>
-          <p className="text-brand-sand">Calendar integration coming soon...</p>
-          </div>
+          <p className="text-brand-sand mb-4">View all upcoming Salsa @ Cal events and activities</p>
+          <a
+            href="/events"
+            className="inline-flex items-center space-x-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white px-6 py-3 rounded-xl2 font-semibold hover:shadow-glow transition-all duration-300"
+          >
+            <span>View Events</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
           </div>
         </div>
   );
