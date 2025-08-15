@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useState } from 'react';
-import { Calendar, MapPin, Clock, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { Calendar, MapPin, Clock, CheckCircle, XCircle, HelpCircle, ExternalLink } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Event {
   title: string;
@@ -27,9 +29,25 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
 
   if (!event) {
     return (
-      <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
-        <div className="text-center py-8">
-          <Calendar size={48} className="text-brand-sand mx-auto mb-4 opacity-50" />
+      <div className="relative overflow-hidden bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/10 via-transparent to-brand-gold/5 pointer-events-none"></div>
+        
+        <div className="relative text-center py-8">
+          {/* Logo - Clickable to dashboard */}
+          <div className="flex justify-center mb-6">
+            <Link href="/dashboard" className="hover:scale-105 transition-transform duration-200">
+              <div className="relative w-20 h-20">
+                <Image 
+                  src="/logo.png" 
+                  alt="Salsa Club Logo" 
+                  fill
+                  className="drop-shadow-lg"
+                />
+              </div>
+            </Link>
+          </div>
+          
           <h3 className="text-xl font-semibold text-brand-gold mb-2">No Upcoming Events</h3>
           <p className="text-brand-sand">Check back later for new events!</p>
         </div>
@@ -77,11 +95,32 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
+  const openEventInGoogleCalendar = (event: Event) => {
+    // Create a Google Calendar event creation URL
+    const startDate = event.start.toISOString().slice(0, 16).replace(/:/g, '');
+    const endDate = new Date(event.start.getTime() + 60 * 60 * 1000).toISOString().slice(0, 16).replace(/:/g, ''); // Default 1 hour duration
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(event.location)}`;
+    window.open(googleCalendarUrl, '_blank');
+  };
+
+  const addToGoogleCalendar = (event: Event) => {
+    // Create a Google Calendar event creation URL (same as view details for now)
+    const startDate = event.start.toISOString().slice(0, 16).replace(/:/g, '');
+    const endDate = new Date(event.start.getTime() + 60 * 60 * 1000).toISOString().slice(0, 16).replace(/:/g, ''); // Default 1 hour duration
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(event.location)}`;
+    window.open(googleCalendarUrl, '_blank');
+  };
+
   return (
-    <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
+    <div className="relative overflow-hidden bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/10 via-transparent to-brand-gold/5 pointer-events-none"></div>
+      
+      {/* Logo in top-right corner */}
+      <div className="relative flex justify-between items-start mb-4">
+        <div className="flex-1">
           <h3 className="text-2xl font-bold text-brand-gold mb-2">{event.title}</h3>
           <div className="flex items-center space-x-4 text-brand-sand">
             <div className="flex items-center space-x-2">
@@ -98,13 +137,26 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
             </div>
           </div>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 ${getEventTypeColor(event.type)}`}>
+        
+        {/* Logo - Clickable to dashboard */}
+        <Link href="/dashboard" className="ml-4 flex-shrink-0 hover:scale-105 transition-transform duration-200">
+          <div className="relative w-16 h-16">
+            <Image 
+              src="/logo.png" 
+              alt="Salsa Club Logo" 
+              fill
+              className="drop-shadow-lg"
+            />
+          </div>
+        </Link>
+        
+        <span className={`px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 ${getEventTypeColor(event.type)} ml-4`}>
           {getEventTypeLabel(event.type)}
         </span>
       </div>
 
       {/* RSVP Section */}
-      <div className="border-t border-brand-maroon pt-4">
+      <div className="relative border-t border-brand-maroon/30 pt-4">
         <h4 className="text-lg font-semibold text-brand-gold mb-3">RSVP Status</h4>
         <div className="flex flex-wrap gap-3">
           {rsvpOptions.map((option) => {
@@ -118,10 +170,10 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
                 onClick={() => handleRSVP(option.value)}
                 disabled={isDisabled}
                 className={`
-                  flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all duration-200
+                  flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all duration-200 backdrop-blur-sm
                   ${isSelected 
-                    ? 'border-brand-gold bg-brand-gold/20 text-brand-gold' 
-                    : 'border-brand-maroon text-brand-sand hover:border-brand-gold hover:text-brand-gold'
+                    ? 'border-brand-gold bg-brand-gold/20 text-brand-gold shadow-lg' 
+                    : 'border-brand-maroon/50 text-brand-sand hover:border-brand-gold hover:text-brand-gold hover:bg-brand-maroon/10'
                   }
                   ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                   focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal
@@ -139,12 +191,19 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 mt-4 pt-4 border-t border-brand-maroon">
-        <button className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors">
-          View Details
+      <div className="relative flex justify-end space-x-3 mt-4 pt-4 border-t border-brand-maroon/30">
+        <button 
+          onClick={() => openEventInGoogleCalendar(event)}
+          className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center space-x-2 backdrop-blur-sm hover:bg-brand-maroon/10 rounded-lg"
+        >
+          <ExternalLink size={16} />
+          <span>View Details</span>
         </button>
-        <button className="px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300">
-          Add to Calendar
+        <button 
+          onClick={() => addToGoogleCalendar(event)}
+          className="px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105"
+        >
+          Download Calendar
         </button>
       </div>
     </div>

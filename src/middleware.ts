@@ -1,20 +1,25 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // Allow access to all routes for now since we only have the home page
-  return NextResponse.next();
+  const { pathname } = request.nextUrl
+  
+  // Check if user is trying to access protected routes
+  if (pathname.startsWith('/dashboard') || 
+      pathname.startsWith('/events/demo') || 
+      pathname.startsWith('/test-salsa-events')) {
+    // Check if user has visited the landing page
+    const hasVisitedLanding = request.cookies.get('hasVisitedLanding')
+    
+    if (!hasVisitedLanding) {
+      // Redirect to landing page if they haven't visited it
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
+  
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
-}; 
+  matcher: ['/dashboard/:path*', '/events/demo/:path*', '/test-salsa-events/:path*']
+} 

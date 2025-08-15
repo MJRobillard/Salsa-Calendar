@@ -16,14 +16,19 @@ import EventHistory from '../components/EventHistory';
 
 
 export default function DashboardPage() {
-  const { user, loading } = useFirebase();
+  const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/');
+    if (!loading) {
+      if (!user) {
+        router.push('/');
+      } else if (!hasVisitedLanding) {
+        // If user is signed in but hasn't visited landing page, redirect them
+        router.push('/');
+      }
     }
-  }, [user, loading, router]);
+  }, [user, loading, hasVisitedLanding, router]);
 
   if (loading) {
     return (
@@ -33,7 +38,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!user) {
+  if (!user || !hasVisitedLanding) {
     return null; // Will redirect
   }
 

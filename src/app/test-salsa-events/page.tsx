@@ -1,9 +1,37 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useFirebase } from '../contexts/FirebaseContext';
+import { useRouter } from 'next/navigation';
 import SalsaCalEvents from '../components/SalsaCalEvents';
 
 export default function TestSalsaEventsPage() {
+  const { user, loading, hasVisitedLanding } = useFirebase();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push('/');
+      } else if (!hasVisitedLanding) {
+        // If user is signed in but hasn't visited landing page, redirect them
+        router.push('/');
+      }
+    }
+  }, [user, loading, hasVisitedLanding, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-brand-paper flex items-center justify-center">
+        <div className="text-brand-gold text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user || !hasVisitedLanding) {
+    return null; // Will redirect
+  }
+
   return (
     <div className="min-h-screen bg-brand-paper p-6">
       <div className="max-w-6xl mx-auto">

@@ -100,7 +100,7 @@ AC: Shows user avatar & quick actions; loading skeleton present.
 3.2 Public Home (Signed-out)
 
 <HeroCTA onSignIn />
-AC: Maroon→gold gradient CTA “Join Salsa @ Cal”; contrast ok; mobile readable.
+AC: Maroon→gold gradient CTA “Sign In”; contrast ok; mobile readable.
 
 <PublicCalendar eventsSource="google:XXXX" />
 AC: Month/week toggle; click to open details (time, location, description).
@@ -236,7 +236,7 @@ service cloud.firestore {
 6) Signed-out vs Signed-in Specifications
 6.1 Signed-out (Public)
 
-Hero: maroon→gold CTA “Join Salsa @ Cal” + 1-line value prop
+Hero: maroon→gold CTA “Sign In” + 1-line value prop
 
 Calendar: embed Google Calendar; event click opens detail drawer
 

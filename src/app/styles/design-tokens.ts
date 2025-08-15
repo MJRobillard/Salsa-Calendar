@@ -13,12 +13,25 @@ export const colors = {
 
 export const gradients = {
   accentFrom: '#800000',
-  accentTo: '#FF9A3E'
+  accentTo: '#FF9A3E',
+  // New modern gradients
+  modern: {
+    primary: 'from-brand-charcoal via-brand-paper to-brand-charcoal',
+    overlay: 'from-brand-maroon/10 via-transparent to-brand-gold/5',
+    button: 'from-accentFrom to-accentTo',
+    glow: 'from-brand-gold/20 to-brand-maroon/20'
+  }
 } as const;
 
 export const shadows = {
   card: '0 8px 24px rgba(0,0,0,.25)',
-  glow: '0 0 0 2px rgba(255,215,0,.25)'
+  glow: '0 0 0 2px rgba(255,215,0,.25)',
+  // New modern shadows
+  modern: {
+    soft: '0 4px 20px rgba(0,0,0,.15)',
+    glow: '0 0 20px rgba(255,215,0,.3)',
+    button: '0 4px 15px rgba(128,0,0,.3)'
+  }
 } as const;
 
 export const borderRadius = {
@@ -66,6 +79,8 @@ export const tailwindClasses = {
     xl2: 'rounded-xl2'
   },
   gradients: {
-    accent: 'bg-gradient-to-tr from-accentFrom to-accentTo'
+    accent: 'bg-gradient-to-tr from-accentFrom to-accentTo',
+    modern: 'bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal',
+    overlay: 'bg-gradient-to-tr from-brand-maroon/10 via-transparent to-brand-gold/5'
   }
 } as const;

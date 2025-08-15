@@ -129,6 +129,15 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
     window.open('https://calendar.google.com/calendar/u/0/r?cid=salsaatcal@gmail.com', '_blank');
   };
 
+  const openEventInGoogleCalendar = (event: SalsaEvent) => {
+    // Create a Google Calendar event creation URL with event details
+    const startDate = event.start.toISOString().slice(0, 16).replace(/:/g, '');
+    const endDate = event.end.toISOString().slice(0, 16).replace(/:/g, '');
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(event.location || '')}&details=${encodeURIComponent(event.description || '')}`;
+    window.open(googleCalendarUrl, '_blank');
+  };
+
   if (loading) {
     return (
       <div className="bg-brand-maroon p-6 rounded-xl2 shadow-card">
@@ -241,6 +250,17 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
                   </div>
                 )}
               </div>
+
+              {/* View Details Button */}
+              <div className="mt-3 pt-3 border-t border-brand-maroon/30">
+                <button
+                  onClick={() => openEventInGoogleCalendar(event)}
+                  className="w-full px-3 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white text-sm rounded-lg hover:shadow-glow transition-all duration-300 flex items-center justify-center space-x-2"
+                >
+                  <ExternalLink size={14} />
+                  <span>View Details</span>
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -249,12 +269,23 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
       {/* View All Events Link */}
       {events.length > 0 && (
         <div className="text-center mt-6 pt-4 border-t border-brand-gold/20">
-          <button
-            onClick={addToGoogleCalendar}
-            className="text-brand-gold hover:text-white transition-colors text-sm"
-          >
-            View all events in Google Calendar →
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <a
+              href="/events"
+              className="text-brand-gold hover:text-white transition-colors text-sm flex items-center space-x-2"
+            >
+              <span>View all events on our site</span>
+              <ExternalLink size={14} />
+            </a>
+            <span className="text-brand-sand text-xs hidden sm:block">•</span>
+            <button
+              onClick={addToGoogleCalendar}
+              className="text-brand-gold hover:text-white transition-colors text-sm flex items-center space-x-2"
+            >
+              <span>View in Google Calendar</span>
+              <ExternalLink size={14} />
+            </button>
+          </div>
         </div>
       )}
     </div>
