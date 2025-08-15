@@ -132,24 +132,25 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   if (mode === 'show') {
     const qrData = generatePersonalQR();
     return (
-      <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon">
         <div className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <QrCode size={24} className="text-brand-gold" />
-            <h3 className="text-xl font-semibold text-brand-gold">Your QR Code</h3>
+          <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
+            <QrCode size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
+            <h3 className="text-lg sm:text-xl font-semibold text-brand-gold">Your QR Code</h3>
           </div>
           
-          <div className="bg-white p-4 rounded-lg inline-block mb-4">
+          <div className="bg-white p-3 sm:p-4 rounded-lg inline-block mb-3 sm:mb-4">
             <QRCode 
               value={qrData} 
-              size={128} 
+              size={96} 
+              className="sm:w-32 sm:h-32"
               level="M"
               includeMargin={true}
               renderAs="svg"
             />
           </div>
           
-          <p className="text-sm text-brand-sand mb-2">Show this to event organizers</p>
+          <p className="text-xs sm:text-sm text-brand-sand mb-2">Show this to event organizers</p>
           <p className="text-xs text-brand-sand opacity-75">ID: {userId.slice(0, 8)}...</p>
         </div>
       </div>
@@ -157,60 +158,60 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   }
 
   return (
-    <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+    <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon">
       <div className="text-center">
-        <div className="flex items-center justify-center space-x-2 mb-4">
-          <Camera size={24} className="text-brand-gold" />
-          <h3 className="text-xl font-semibold text-brand-gold">QR Check-in</h3>
+        <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
+          <Camera size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
+          <h3 className="text-lg sm:text-xl font-semibold text-brand-gold">QR Check-in</h3>
         </div>
 
         {!isScanning && !scanResult && !error && (
-          <div className="space-y-4">
-            <div className="bg-brand-maroon/20 p-4 rounded-lg">
-              <Scan size={48} className="text-brand-gold mx-auto mb-2" />
-              <p className="text-brand-sand text-sm">Scan event QR codes to check in</p>
+          <div className="space-y-3 sm:space-y-4">
+            <div className="bg-brand-maroon/20 p-3 sm:p-4 rounded-lg">
+              <Scan size={36} className="sm:w-12 sm:h-12 text-brand-gold mx-auto mb-2" />
+              <p className="text-brand-sand text-xs sm:text-sm">Scan event QR codes to check in</p>
             </div>
             
             <button
               onClick={startScanning}
               disabled={permission === 'denied'}
-              className="px-6 py-3 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               Start Scanning
             </button>
             
             {permission === 'denied' && (
-              <p className="text-red-400 text-sm">Camera permission denied. Please enable in browser settings.</p>
+              <p className="text-red-400 text-xs sm:text-sm">Camera permission denied. Please enable in browser settings.</p>
             )}
           </div>
         )}
 
         {isScanning && (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="relative">
               <video
                 ref={videoRef}
-                className="w-full max-w-sm mx-auto rounded-lg border border-brand-maroon"
+                className="w-full max-w-xs sm:max-w-sm mx-auto rounded-lg border border-brand-maroon"
                 autoPlay
                 playsInline
                 muted
               />
               <div className="absolute inset-0 border-2 border-brand-gold rounded-lg pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 border-2 border-brand-gold rounded-lg"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 border-2 border-brand-gold rounded-lg"></div>
               </div>
               <button
                 onClick={stopScanning}
-                className="absolute top-2 right-2 p-2 bg-brand-charcoal rounded-full text-brand-gold hover:bg-brand-maroon/20 transition-colors"
+                className="absolute top-2 right-2 p-1.5 sm:p-2 bg-brand-charcoal rounded-full text-brand-gold hover:bg-brand-maroon/20 transition-colors"
               >
-                <X size={20} />
+                <X size={16} className="sm:w-5 sm:h-5" />
               </button>
             </div>
             
             <div className="space-y-2">
-              <p className="text-brand-sand text-sm">Position QR code within the frame</p>
+              <p className="text-brand-sand text-xs sm:text-sm">Position QR code within the frame</p>
               <button
                 onClick={handleMockScan}
-                className="bg-brand-gold text-brand-charcoal px-4 py-2 rounded-lg font-medium hover:bg-brand-gold/90 transition-colors"
+                className="bg-brand-gold text-brand-charcoal px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-brand-gold/90 transition-colors text-sm sm:text-base"
               >
                 Simulate Scan
               </button>
@@ -219,15 +220,15 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
         )}
 
         {scanResult && (
-          <div className="space-y-4">
-            <div className="bg-green-500/20 p-4 rounded-lg border border-green-500/30">
-              <CheckCircle size={48} className="text-green-400 mx-auto mb-2" />
-              <p className="text-green-400 font-medium">Check-in Successful!</p>
-              <p className="text-green-300 text-sm mt-1">Event: {scanResult.split('|')[1]}</p>
+          <div className="space-y-3 sm:space-y-4">
+            <div className="bg-green-500/20 p-3 sm:p-4 rounded-lg border border-green-500/30">
+              <CheckCircle size={36} className="sm:w-12 sm:h-12 text-green-400 mx-auto mb-2" />
+              <p className="text-green-400 font-medium text-sm sm:text-base">Check-in Successful!</p>
+              <p className="text-green-300 text-xs sm:text-sm mt-1">Event: {scanResult.split('|')[1]}</p>
             </div>
             <button
               onClick={() => setScanResult(null)}
-              className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors"
+              className="px-3 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
             >
               Scan Another
             </button>
@@ -235,15 +236,15 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
         )}
 
         {error && (
-          <div className="space-y-4">
-            <div className="bg-red-500/20 p-4 rounded-lg border border-red-500/30">
-              <AlertCircle size={48} className="text-red-400 mx-auto mb-2" />
-              <p className="text-red-400 font-medium">Scan Failed</p>
-              <p className="text-red-300 text-sm mt-1">{error}</p>
+          <div className="space-y-3 sm:space-y-4">
+            <div className="bg-red-500/20 p-3 sm:p-4 rounded-lg border border-red-500/30">
+              <AlertCircle size={36} className="sm:w-12 sm:h-12 text-red-400 mx-auto mb-2" />
+              <p className="text-red-400 font-medium text-sm sm:text-base">Scan Failed</p>
+              <p className="text-red-300 text-xs sm:text-sm mt-1">{error}</p>
             </div>
             <button
               onClick={() => setError(null)}
-              className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors"
+              className="px-3 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
             >
               Try Again
             </button>

@@ -111,36 +111,37 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-paper text-white">
-      <div className="flex">
+    <div className="min-h-screen bg-brand-paper text-white overflow-x-hidden">
+      <div className="flex flex-row w-full overflow-hidden">
         {/* Sidebar - Only show for logged-in users */}
         {user && <Sidebar />}
         
         {/* Main Content */}
-        <div className={`flex-1 flex flex-col ${user ? '' : 'ml-0'}`}>
+        <div className="flex-1 flex flex-col min-w-0 w-full">
           {/* TopBar - Only show for logged-in users */}
           {user ? (
             <TopBar user={user} />
           ) : (
-            <header className="bg-brand-charcoal border-b border-brand-maroon px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-brand-gold">Events</h2>
-                  <p className="text-sm text-brand-sand">Public events calendar</p>
+            <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-semibold text-brand-gold">Events</h2>
+                  <p className="text-xs sm:text-sm text-brand-sand">Public events calendar</p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-4 ml-2 flex-shrink-0">
                   <button
                     onClick={() => router.push('/')}
-                    className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors"
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
                   >
                     Back to Home
                   </button>
                   <button
                     onClick={signIn}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300"
+                    className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 text-sm sm:text-base"
                   >
                     <LogIn size={16} />
-                    <span>Sign In</span>
+                    <span className="hidden sm:inline">Sign In</span>
+                    <span className="sm:hidden">Sign In</span>
                   </button>
                 </div>
               </div>
@@ -148,12 +149,12 @@ export default function EventsPage() {
           )}
           
           {/* Events Content */}
-          <main className="flex-1 p-6">
-            <div className="max-w-7xl mx-auto">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+            <div className="max-w-7xl mx-auto w-full">
               {/* Page Header */}
-              <div className="mb-8">
-                <h1 className="text-4xl font-bold text-brand-gold mb-2">Events</h1>
-                <p className="text-brand-sand text-lg">
+              <div className="mb-6 sm:mb-8 w-full">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-gold mb-2">Events</h1>
+                <p className="text-brand-sand text-base sm:text-lg">
                   {user 
                     ? 'Stay updated with all Salsa @ Cal events and activities'
                     : 'Browse upcoming Salsa @ Cal events. Sign in to RSVP and access your dashboard!'
@@ -162,12 +163,12 @@ export default function EventsPage() {
                 
                 {/* Guest User Prompt */}
                 {!user && (
-                  <div className="mt-4 p-4 bg-brand-maroon/20 border border-brand-maroon rounded-lg">
+                  <div className="mt-4 p-3 sm:p-4 bg-brand-maroon/20 border border-brand-maroon rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <User size={20} className="text-brand-gold" />
-                      <div>
-                        <p className="text-brand-gold font-medium">Guest User</p>
-                        <p className="text-brand-sand text-sm">
+                      <User size={18} className="text-brand-gold flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-brand-gold font-medium text-sm sm:text-base">Guest User</p>
+                        <p className="text-brand-sand text-xs sm:text-sm">
                           Sign in to RSVP for events, track your progress, and access the full dashboard.
                         </p>
                       </div>
@@ -178,14 +179,14 @@ export default function EventsPage() {
 
               {/* Next Event Section */}
               {nextEvent && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-semibold text-brand-gold mb-4">Next Event</h2>
-                  <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+                <div className="mb-6 sm:mb-8 w-full">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">Next Event</h2>
+                  <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon w-full">
                     {/* Event Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-brand-gold mb-2">{nextEvent.title}</h3>
-                        <div className="flex items-center space-x-4 text-brand-sand">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 space-y-3 sm:space-y-0">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xl sm:text-2xl font-bold text-brand-gold mb-2 break-words">{nextEvent.title}</h3>
+                        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-brand-sand text-sm sm:text-base">
                           <div className="flex items-center space-x-2">
                             <Calendar size={16} />
                             <span>{formatDate(nextEvent.start)}</span>
@@ -197,12 +198,12 @@ export default function EventsPage() {
                           {nextEvent.location && (
                             <div className="flex items-center space-x-2">
                               <MapPin size={16} />
-                              <span>{nextEvent.location}</span>
+                              <span className="break-words">{nextEvent.location}</span>
                             </div>
                           )}
                         </div>
                       </div>
-                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 text-brand-gold">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 text-brand-gold self-start sm:self-auto flex-shrink-0">
                         Upcoming
                       </span>
                     </div>
@@ -211,8 +212,8 @@ export default function EventsPage() {
                     {user && (
                       <>
                         <div className="border-t border-brand-maroon pt-4 mb-4">
-                          <h4 className="text-lg font-semibold text-brand-gold mb-3">RSVP Status</h4>
-                          <div className="flex flex-wrap gap-3">
+                          <h4 className="text-base sm:text-lg font-semibold text-brand-gold mb-3">RSVP Status</h4>
+                          <div className="flex flex-wrap gap-2 sm:gap-3">
                             {[
                               { value: 'going', label: 'Going', icon: CheckCircle, color: 'text-green-400' },
                               { value: 'interested', label: 'Interested', icon: HelpCircle, color: 'text-yellow-400' },
@@ -226,7 +227,7 @@ export default function EventsPage() {
                                   key={option.value}
                                   onClick={() => handleRSVP(option.value as any)}
                                   className={`
-                                    flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all duration-200
+                                    flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 text-sm sm:text-base flex-shrink-0
                                     ${isSelected 
                                       ? 'border-brand-gold bg-brand-gold/20 text-brand-gold' 
                                       : 'border-brand-maroon text-brand-sand hover:border-brand-gold hover:text-brand-gold'
@@ -245,17 +246,17 @@ export default function EventsPage() {
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex justify-end space-x-3 pt-4 border-t border-brand-maroon">
+                    <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 border-t border-brand-maroon">
                       <button 
                         onClick={viewEventDetails}
-                        className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center space-x-2"
+                        className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base"
                       >
                         <ExternalLink size={16} />
                         <span>View Details</span>
                       </button>
                       <button 
                         onClick={addToCalendar}
-                        className="px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 flex items-center space-x-2"
+                        className="px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base"
                       >
                         <Calendar size={16} />
                         <span>Download Calendar</span>
@@ -266,15 +267,15 @@ export default function EventsPage() {
               )}
 
               {/* All Upcoming Events */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-semibold text-brand-gold mb-4">All Upcoming Events</h2>
+              <div className="mb-6 sm:mb-8 w-full">
+                <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">All Upcoming Events</h2>
                 <SalsaCalEvents maxEvents={10} onEventsLoaded={handleEventsLoaded} />
               </div>
 
               {/* Event History - Only show for logged-in users */}
               {user && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-semibold text-brand-gold mb-4">Event History</h2>
+                <div className="mb-6 sm:mb-8 w-full">
+                  <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">Event History</h2>
                   <EventHistory 
                     items={[
                       { date: '2024-01-22', type: 'lesson', role: 'lead', location: 'Hearst Gym' },
@@ -287,14 +288,14 @@ export default function EventsPage() {
 
               {/* Guest User CTA */}
               {!user && (
-                <div className="mt-8 p-6 bg-gradient-to-tr from-accentFrom/20 to-accentTo/20 border border-brand-maroon rounded-xl2 text-center">
-                  <h3 className="text-2xl font-bold text-brand-gold mb-3">Ready to Join?</h3>
-                  <p className="text-brand-sand mb-6">
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-tr from-accentFrom/20 to-accentTo/20 border border-brand-maroon rounded-xl2 text-center w-full">
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-gold mb-3">Ready to Join?</h3>
+                  <p className="text-brand-sand mb-4 sm:mb-6 text-sm sm:text-base">
                     Sign in to access your personalized dashboard, RSVP for events, and track your dance progress!
                   </p>
                   <button
                     onClick={signIn}
-                    className="bg-gradient-to-tr from-accentFrom to-accentTo text-white px-8 py-4 rounded-xl2 font-semibold text-lg shadow-card hover:shadow-glow transition-all duration-300"
+                    className="bg-gradient-to-tr from-accentFrom to-accentTo text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl2 font-semibold text-base sm:text-lg shadow-card hover:shadow-glow transition-all duration-300"
                   >
                     Sign In with Google
                   </button>

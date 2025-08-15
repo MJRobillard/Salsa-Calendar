@@ -43,20 +43,20 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-paper text-white">
-      <div className="flex">
+    <div className="min-h-screen bg-brand-paper text-white overflow-x-hidden">
+      <div className="flex flex-row w-full overflow-hidden">
         {/* Sidebar */}
         <Sidebar />
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0 w-full">
           <TopBar user={user} />
           
           {/* Dashboard Content */}
-          <main className="flex-1 p-6">
-            <div className="max-w-7xl mx-auto">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+            <div className="max-w-7xl mx-auto w-full">
               {/* Row A - Next Event */}
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6 w-full">
                 <NextEventCard 
                   event={{
                     title: "Beginner Salsa Class",
@@ -70,7 +70,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Row B - 3 Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 w-full">
                 <QRCheckinCard mode="scan" userId={user.uid} />
                 <ProgressSummary 
                   styles={['salsa', 'bachata', 'cumbia']}
@@ -91,7 +91,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Row C - Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 w-full">
                 <JourneyLineChart 
                   data={[
                     { date: '2024-01-01', attended: true },
@@ -109,10 +109,8 @@ export default function DashboardPage() {
                 />
               </div>
 
-
-
               {/* Row E - Event History */}
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6 w-full">
                 <EventHistory 
                   items={[
                     { date: '2024-01-22', type: 'lesson', role: 'lead', location: 'Hearst Gym' },

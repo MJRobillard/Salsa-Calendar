@@ -60,30 +60,30 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
   };
 
   return (
-    <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
-      <div className="flex items-center space-x-2 mb-6">
-        <Target size={24} className="text-brand-gold" />
-        <h3 className="text-xl font-semibold text-brand-gold">Progress Summary</h3>
+    <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="flex items-center space-x-2 mb-4 sm:mb-6">
+        <Target size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
+        <h3 className="text-lg sm:text-xl font-semibold text-brand-gold">Progress Summary</h3>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {styles.map((style) => {
           const styleData = data[style.toLowerCase()] || { sessions: 0, minutes: 0 };
           const weeklyDelta = calculateWeeklyDelta(styleData.sessions, Math.max(0, styleData.sessions - 2)); // Mock previous week data
           
           return (
-            <div key={style} className="space-y-3">
+            <div key={style} className="space-y-2 sm:space-y-3">
               {/* Style Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl">{getStyleIcon(style)}</span>
-                  <span className="font-medium text-brand-gold capitalize">{style}</span>
+                  <span className="text-xl sm:text-2xl">{getStyleIcon(style)}</span>
+                  <span className="font-medium text-brand-gold capitalize text-sm sm:text-base">{style}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-brand-sand">This Week</div>
+                  <div className="text-xs sm:text-sm text-brand-sand">This Week</div>
                   <div className="flex items-center space-x-1">
                     {getTrendIcon(weeklyDelta.trend)}
-                    <span className={`text-sm font-medium ${getTrendColor(weeklyDelta.trend)}`}>
+                    <span className={`text-xs sm:text-sm font-medium ${getTrendColor(weeklyDelta.trend)}`}>
                       {weeklyDelta.trend === 'up' ? '+' : weeklyDelta.trend === 'down' ? '-' : ''}{weeklyDelta.value}
                     </span>
                   </div>
@@ -91,28 +91,28 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
               </div>
 
               {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-1 sm:space-y-2">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-brand-sand">Sessions</span>
                   <span className="text-brand-gold font-medium">{styleData.sessions}</span>
                 </div>
-                <div className="w-full bg-brand-maroon/20 rounded-full h-2">
+                <div className="w-full bg-brand-maroon/20 rounded-full h-1.5 sm:h-2">
                   <div 
-                    className={`h-2 bg-gradient-to-r ${getStyleColor(style)} rounded-full transition-all duration-500`}
+                    className={`h-1.5 sm:h-2 bg-gradient-to-r ${getStyleColor(style)} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min((styleData.sessions / 20) * 100, 100)}%` }}
                   />
                 </div>
               </div>
 
               {/* Minutes Progress */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
+              <div className="space-y-1 sm:space-y-2">
+                <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-brand-sand">Minutes</span>
                   <span className="text-brand-gold font-medium">{styleData.minutes}</span>
                 </div>
-                <div className="w-full bg-brand-maroon/20 rounded-full h-2">
+                <div className="w-full bg-brand-maroon/20 rounded-full h-1.5 sm:h-2">
                   <div 
-                    className={`h-2 bg-gradient-to-r ${getStyleColor(style)} rounded-full transition-all duration-500`}
+                    className={`h-1.5 sm:h-2 bg-gradient-to-r ${getStyleColor(style)} rounded-full transition-all duration-500`}
                     style={{ width: `${Math.min((styleData.minutes / 600) * 100, 100)}%` }}
                   />
                 </div>
@@ -131,10 +131,10 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
       </div>
 
       {/* Overall Progress */}
-      <div className="mt-6 pt-6 border-t border-brand-maroon">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-lg font-medium text-brand-gold">Overall Progress</span>
-          <span className="text-2xl font-bold text-brand-gold">
+      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-brand-maroon">
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <span className="text-base sm:text-lg font-medium text-brand-gold">Overall Progress</span>
+          <span className="text-xl sm:text-2xl font-bold text-brand-gold">
             {Math.round((styles.reduce((total, style) => {
               const styleData = data[style.toLowerCase()] || { sessions: 0, minutes: 0 };
               return total + styleData.sessions;
@@ -142,9 +142,9 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
           </span>
         </div>
         
-        <div className="w-full bg-brand-maroon/20 rounded-full h-3">
+        <div className="w-full bg-brand-maroon/20 rounded-full h-2 sm:h-3">
           <div 
-            className="h-3 bg-gradient-to-r from-accentFrom to-accentTo rounded-full transition-all duration-500"
+            className="h-2 sm:h-3 bg-gradient-to-r from-accentFrom to-accentTo rounded-full transition-all duration-500"
             style={{ 
               width: `${Math.min((styles.reduce((total, style) => {
                 const styleData = data[style.toLowerCase()] || { sessions: 0, minutes: 0 };
