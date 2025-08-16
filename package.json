@@ -13,6 +13,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "@zxing/browser": "^0.1.5",
     "firebase": "^10.7.1",
+    "html5-qrcode": "^2.3.8",
     "ical.js": "^2.2.1",
     "lucide-react": "^0.263.1",
     "next": "14.1.0",

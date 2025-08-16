@@ -43,8 +43,11 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-paper text-white overflow-x-hidden">
-      <div className="flex flex-row w-full overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal text-white overflow-x-hidden relative">
+      {/* Subtle overlay gradient for depth */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+      
+      <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
         <Sidebar />
         

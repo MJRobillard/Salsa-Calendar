@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Camera, QrCode, Scan, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Camera, QrCode, Scan, X, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import QRCode from 'qrcode.react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 interface QRCheckinCardProps {
   mode: 'scan' | 'show';
@@ -12,87 +13,120 @@ interface QRCheckinCardProps {
 export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
+  const [scanTime, setScanTime] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [permission, setPermission] = useState<PermissionState | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
-    // Check camera permission on mount
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'camera' as PermissionName })
-        .then((result) => {
-          setPermission(result.state);
-        })
-        .catch(() => {
-          // Fallback for browsers that don't support camera permissions
-          setPermission('granted');
-        });
-    } else {
-      setPermission('granted');
-    }
-
+    // Detect if user is on mobile
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+    
     return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
+      stopScanning();
     };
   }, []);
 
-  const startScanning = async () => {
-    if (!videoRef.current) return;
+  const getCurrentTime = async (): Promise<string> => {
+    try {
+      // Using World Time API to get current time
+      const response = await fetch('http://worldtimeapi.org/api/ip');
+      const data = await response.json();
+      return new Date(data.datetime).toLocaleString();
+    } catch (error) {
+      // Fallback to local time if API fails
+      return new Date().toLocaleString();
+    }
+  };
 
+  const startScanning = async () => {
     try {
       setError(null);
       setIsScanning(true);
-      
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
-      });
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+
+      // First, explicitly request camera permission
+      try {
+        await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: 'environment', // Use back camera on mobile
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        });
+      } catch (permissionError: any) {
+        if (permissionError.name === 'NotAllowedError') {
+          setError('Camera permission denied. Please allow camera access in your browser settings and try again.');
+          setIsScanning(false);
+          return;
+        } else if (permissionError.name === 'NotFoundError') {
+          setError('No camera found on this device.');
+          setIsScanning(false);
+          return;
+        } else {
+          setError('Failed to access camera. Please check your device and try again.');
+          setIsScanning(false);
+          return;
+        }
       }
-      
-    } catch (err: any) {
-      console.error('Error starting camera:', err);
-      if (err.name === 'NotAllowedError') {
-        setPermission('denied');
-        setError('Camera permission denied. Please enable camera access.');
-      } else if (err.name === 'NotFoundError') {
-        setError('No camera found on this device.');
-      } else {
-        setError('Failed to start camera. Please try again.');
-      }
+
+      // Now create the QR scanner
+      scannerRef.current = new Html5QrcodeScanner(
+        "qr-checkin-reader",
+        { 
+          fps: 10, 
+          qrbox: { width: 250, height: 250 },
+          aspectRatio: 1.0
+        },
+        false
+      );
+
+      scannerRef.current.render(
+        async (decodedText) => {
+          // Stop scanning
+          if (scannerRef.current) {
+            await scannerRef.current.clear();
+            setIsScanning(false);
+          }
+
+          // Get current time
+          const currentTime = await getCurrentTime();
+          setScanTime(currentTime);
+          setScanResult(decodedText);
+          
+          // Process the scan
+          handleScanSuccess(decodedText);
+        },
+        (errorMessage) => {
+          // Handle scan errors silently
+          console.log('QR scan error:', errorMessage);
+        }
+      );
+    } catch (error) {
+      console.error('Scanner error:', error);
+      setError('Failed to start camera. Please check camera permissions and try again.');
       setIsScanning(false);
     }
   };
 
-  const stopScanning = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
+  const stopScanning = async () => {
+    if (scannerRef.current) {
+      try {
+        await scannerRef.current.clear();
+        scannerRef.current = null;
+      } catch (error) {
+        console.error('Error stopping scanner:', error);
+      }
     }
     setIsScanning(false);
-    setScanResult(null);
   };
 
-  const handleMockScan = () => {
-    // Mock QR scan for demonstration
-    const mockResult = 'SALSA@CAL|event123|2024-01-22T18:00:00Z|abc123';
-    setScanResult(mockResult);
-    stopScanning();
-    
-    // Simulate attendance write
-    setTimeout(() => {
-      console.log('Attendance recorded:', mockResult);
-      setScanResult(null);
-    }, 3000);
-  };
+
 
   const handleScanSuccess = async (qrData: string) => {
     try {
@@ -170,64 +204,81 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
             <div className="bg-brand-maroon/20 p-3 sm:p-4 rounded-lg">
               <Scan size={36} className="sm:w-12 sm:h-12 text-brand-gold mx-auto mb-2" />
               <p className="text-brand-sand text-xs sm:text-sm">Scan event QR codes to check in</p>
+
             </div>
             
             <button
               onClick={startScanning}
-              disabled={permission === 'denied'}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 text-sm sm:text-base"
             >
               Start Scanning
             </button>
             
-            {permission === 'denied' && (
-              <p className="text-red-400 text-xs sm:text-sm">Camera permission denied. Please enable in browser settings.</p>
-            )}
+            <div className="text-xs text-brand-sand opacity-75">
+              {isMobile ? (
+                <>
+                  <p>📱 Mobile detected - Camera will open automatically</p>
+                  <p>🔒 Grant camera permission when prompted</p>
+                  <p>📷 Use back camera for best scanning results</p>
+                </>
+              ) : (
+                <>
+                  <p></p>
+                  <p></p>
+                </>
+              )}
+            </div>
           </div>
         )}
 
         {isScanning && (
           <div className="space-y-3 sm:space-y-4">
-            <div className="relative">
-              <video
-                ref={videoRef}
-                className="w-full max-w-xs sm:max-w-sm mx-auto rounded-lg border border-brand-maroon"
-                autoPlay
-                playsInline
-                muted
-              />
-              <div className="absolute inset-0 border-2 border-brand-gold rounded-lg pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 border-2 border-brand-gold rounded-lg"></div>
-              </div>
-              <button
-                onClick={stopScanning}
-                className="absolute top-2 right-2 p-1.5 sm:p-2 bg-brand-charcoal rounded-full text-brand-gold hover:bg-brand-maroon/20 transition-colors"
-              >
-                <X size={16} className="sm:w-5 sm:h-5" />
-              </button>
+            <div className="bg-brand-paper rounded-lg p-4 mb-4">
+              <p className="text-brand-sand mb-2">📹 Camera is active</p>
+              <p className="text-white text-sm mb-2">
+                Point your camera at a QR code to scan
+              </p>
+              {isMobile && (
+                <p className="text-brand-sand text-xs opacity-75">
+                  📱 Mobile: Use back camera for best results
+                </p>
+              )}
             </div>
             
-            <div className="space-y-2">
-              <p className="text-brand-sand text-xs sm:text-sm">Position QR code within the frame</p>
-              <button
-                onClick={handleMockScan}
-                className="bg-brand-gold text-brand-charcoal px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-brand-gold/90 transition-colors text-sm sm:text-base"
-              >
-                Simulate Scan
-              </button>
-            </div>
+            <div id="qr-checkin-reader" className="mb-4"></div>
+            
+            <button
+              onClick={stopScanning}
+              className="px-4 py-2 bg-brand-maroon text-white rounded-lg hover:bg-brand-maroon/80 transition-colors"
+            >
+              Stop Scanner
+            </button>
           </div>
         )}
 
-        {scanResult && (
+        {scanResult && scanTime && (
           <div className="space-y-3 sm:space-y-4">
             <div className="bg-green-500/20 p-3 sm:p-4 rounded-lg border border-green-500/30">
               <CheckCircle size={36} className="sm:w-12 sm:h-12 text-green-400 mx-auto mb-2" />
               <p className="text-green-400 font-medium text-sm sm:text-base">Check-in Successful!</p>
-              <p className="text-green-300 text-xs sm:text-sm mt-1">Event: {scanResult.split('|')[1]}</p>
+              <p className="text-green-300 text-xs sm:text-sm mt-1">Event: {scanResult.split('|')[1] || 'Unknown'}</p>
             </div>
+            
+            <div className="bg-brand-paper rounded-lg p-4">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <Clock className="w-4 h-4 text-brand-gold" />
+                <span className="text-brand-gold font-medium">Check-in Time:</span>
+              </div>
+              <p className="text-white font-mono text-sm">
+                {scanTime}
+              </p>
+            </div>
+            
             <button
-              onClick={() => setScanResult(null)}
+              onClick={() => {
+                setScanResult(null);
+                setScanTime(null);
+              }}
               className="px-3 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
             >
               Scan Another

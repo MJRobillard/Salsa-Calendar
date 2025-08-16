@@ -1,31 +1,15 @@
 'use client'
 
-import React, { useState } from 'react';
-import { User, LogOut, Settings, Bell } from 'lucide-react';
-import { useFirebase } from '../contexts/FirebaseContext';
+import React from 'react';
+import { User, Settings, Bell } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface TopBarProps {
   user: any;
 }
 
 export default function TopBar({ user }: TopBarProps) {
-  const { signOut } = useFirebase();
-  const router = useRouter();
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setShowDropdown(false);
-      // Redirect to home page after successful sign out
-      router.push('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
 
   return (
     <header className="relative overflow-hidden bg-gradient-to-r from-brand-charcoal via-brand-paper to-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
@@ -73,52 +57,24 @@ export default function TopBar({ user }: TopBarProps) {
           </button>
 
           {/* User Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 text-brand-sand hover:text-brand-gold hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm"
-              aria-label="User menu"
-              aria-expanded={showDropdown}
-            >
-              {user.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  alt={user.displayName}
-                  className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-brand-maroon shadow-lg flex-shrink-0"
-                />
-              ) : (
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-brand-maroon rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
-                  <User size={14} className="sm:w-4 sm:h-4 text-white" />
-                </div>
-              )}
-              <span className="hidden lg:block font-medium truncate max-w-32">{user.displayName}</span>
-            </button>
-
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <>
-                <div 
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowDropdown(false)}
-                  aria-hidden="true"
-                />
-                <div className="absolute right-0 mt-2 w-48 sm:w-56 bg-brand-charcoal/95 backdrop-blur-sm border border-brand-maroon/50 rounded-lg shadow-card z-20">
-                  <div className="py-2">
-                    <div className="px-4 py-2 border-b border-brand-maroon/30">
-                      <p className="text-sm text-brand-sand break-words">{user.email}</p>
-                    </div>
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-brand-sand hover:bg-brand-maroon/20 hover:text-brand-gold transition-colors"
-                    >
-                      <LogOut size={16} />
-                      <span>Sign Out</span>
-                    </button>
-                  </div>
-                </div>
-              </>
+          <Link
+            href="/profile"
+            className="flex items-center space-x-2 sm:space-x-3 p-1.5 sm:p-2 text-brand-sand hover:text-brand-gold hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm"
+            aria-label="Go to profile"
+          >
+            {user.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName}
+                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-brand-maroon shadow-lg flex-shrink-0"
+              />
+            ) : (
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-brand-maroon rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                <User size={14} className="sm:w-4 sm:h-4 text-white" />
+              </div>
             )}
-          </div>
+            <span className="hidden lg:block font-medium truncate max-w-32">{user.displayName}</span>
+          </Link>
         </div>
       </div>
     </header>
