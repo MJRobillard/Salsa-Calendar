@@ -1,9 +1,8 @@
 'use client'
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import NextEventCard from '../components/NextEventCard';
@@ -13,11 +12,22 @@ import LatestPhotos from '../components/LatestPhotos';
 import JourneyLineChart from '../components/JourneyLineChart';
 import SkillMixDonut from '../components/SkillMixDonut';
 import EventHistory from '../components/EventHistory';
+import ICAL from 'ical.js';
 
+interface SalsaEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  location?: string;
+  description?: string;
+}
 
 export default function DashboardPage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
+  const [nextEvent, setNextEvent] = useState<SalsaEvent | null>(null);
+  const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
 
   useEffect(() => {
     if (!loading) {
@@ -29,6 +39,71 @@ export default function DashboardPage() {
       }
     }
   }, [user, loading, hasVisitedLanding, router]);
+
+  // Fetch events when component mounts
+  useEffect(() => {
+    if (user && hasVisitedLanding) {
+      fetchEvents();
+    }
+  }, [user, hasVisitedLanding]);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('/api/calendar');
+      
+      if (!response.ok) {
+        if (response.status === 500) {
+          console.error('Calendar service temporarily unavailable');
+          return;
+        } else {
+          console.error(`Failed to fetch events (${response.status})`);
+          return;
+        }
+      }
+      
+      const icsData = await response.text();
+      const parsedEvents = parseICSEvents(icsData);
+      
+      // Sort by start date and take the next upcoming event
+      const sortedEvents = parsedEvents
+        .filter(event => event.start > new Date())
+        .sort((a, b) => a.start.getTime() - b.start.getTime());
+      
+      if (sortedEvents.length > 0) {
+        setNextEvent(sortedEvents[0]);
+      }
+    } catch (err) {
+      console.error('Error fetching events:', err);
+    }
+  };
+
+  const parseICSEvents = (icsData: string): SalsaEvent[] => {
+    try {
+      const jcalData = ICAL.parse(icsData);
+      const comp = new ICAL.Component(jcalData);
+      const vevents = comp.getAllSubcomponents('vevent');
+      
+      return vevents.map(vevent => {
+        const event = new ICAL.Event(vevent);
+        return {
+          id: event.uid,
+          title: event.summary || 'Untitled Event',
+          start: event.startDate.toJSDate(),
+          end: event.endDate.toJSDate(),
+          location: event.location,
+          description: event.description
+        };
+      });
+    } catch (error) {
+      console.error('Error parsing ICS data:', error);
+      return [];
+    }
+  };
+
+  const handleRSVP = (status: 'going' | 'interested' | 'not_going') => {
+    setRsvpStatus(status);
+    console.log('RSVP status updated:', status);
+  };
 
   if (loading) {
     return (
@@ -60,16 +135,25 @@ export default function DashboardPage() {
             <div className="max-w-7xl mx-auto w-full">
               {/* Row A - Next Event */}
               <div className="mb-4 sm:mb-6 w-full">
-                <NextEventCard 
-                  event={{
-                    title: "Beginner Salsa Class",
-                    start: new Date(Date.now() + 86400000), // Tomorrow
-                    location: "Hearst Gymnasium",
-                    type: "lesson"
-                  }}
-                  rsvpStatus="going"
-                  onRSVP={() => console.log('RSVP clicked')}
-                />
+                {nextEvent ? (
+                  <NextEventCard 
+                    event={{
+                      title: nextEvent.title,
+                      start: nextEvent.start,
+                      location: nextEvent.location || 'TBD',
+                      type: 'event'
+                    }}
+                    rsvpStatus={rsvpStatus}
+                    onRSVP={handleRSVP}
+                  />
+                ) : (
+                  <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold text-brand-gold mb-2">No Upcoming Events</h3>
+                      <p className="text-brand-sand">Check back later for upcoming Salsa @ Cal events!</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Row B - 3 Cards */}
