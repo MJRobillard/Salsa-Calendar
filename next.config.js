@@ -1,5 +1,14 @@
 module.exports = {
-  // existing config if present
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   webpack: (config, { nextRuntime, isServer }) => {
     // Avoid bundling `undici` into the edge runtime (middleware) bundle.
     // The version of SWC used by Next.js fails to parse some stage-3
@@ -33,4 +42,4 @@ module.exports = {
 
     return config;
   },
-}; 
+};

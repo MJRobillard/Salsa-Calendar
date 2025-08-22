@@ -26,9 +26,7 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   { icon: <Home size={20} />, label: 'Dashboard', href: '/dashboard' },
   { icon: <Calendar size={20} />, label: 'Events', href: '/events' },
-  { icon: <BarChart3 size={20} />, label: 'Progress', href: '/progress' },
   { icon: <ImageIcon size={20} />, label: 'Media', href: '/media' },
-  { icon: <User size={20} />, label: 'Profile', href: '/profile' },
   { icon: <Info size={20} />, label: 'About', href: '/about' },
   { icon: <Mail size={20} />, label: 'Contact', href: '/contact' },
   { icon: <Settings size={20} />, label: 'Settings', href: '/settings' },

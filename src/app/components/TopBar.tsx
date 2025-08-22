@@ -48,13 +48,13 @@ export default function TopBar({ user }: TopBarProps) {
           </button>
 
           {/* Settings */}
-          <button
-            className="p-1.5 sm:p-2 text-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm cursor-not-allowed opacity-50"
-            aria-label="Settings (Coming Soon)"
-            disabled
+          <Link
+            href="/settings"
+            className="p-1.5 sm:p-2 text-brand-sand hover:text-brand-gold hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm"
+            aria-label="Go to settings"
           >
             <Settings size={18} className="sm:w-5 sm:h-5" />
-          </button>
+          </Link>
 
           {/* User Menu */}
           <Link

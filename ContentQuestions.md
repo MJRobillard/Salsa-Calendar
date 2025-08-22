@@ -11,6 +11,7 @@
 - **Leadership Structure**: Who are the current officers and what are their roles?
 - **Mission & Values**: What are the core principles and goals of the organization?
 
+
 #### **Contact Page** (`/contact`)
 - **Contact Methods**: What are the official ways to reach the organization?
 - **Officer Contact Information**: Who should students contact for specific questions?
