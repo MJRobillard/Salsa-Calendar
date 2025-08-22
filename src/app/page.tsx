@@ -184,7 +184,7 @@ export default function HomePage() {
         </div> */}
 
         {/* Upcoming Events Section */}
-        <div className="relative overflow-hidden bg-[#2D0F0F]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FF6F3C]/40 backdrop-blur-sm">
+        <div className="relative overflow-hidden bg-[#2D0F0F]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FF6F3C]/40 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
           <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="lg:flex-1 mb-8 lg:mb-0">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Upcoming Events</h2>
@@ -203,6 +203,93 @@ export default function HomePage() {
                 </svg>
               </a>
             </div>
+          </div>
+        </div>
+
+        {/* Community Links Section */}
+        <div className="relative overflow-hidden bg-[#2D0F0F]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FF6F3C]/40 backdrop-blur-sm">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Join Our Community</h2>
+            <p className="text-white/90 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
+              Stay connected with Salsa @ Cal and never miss an update
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Email Signup */}
+            <a 
+              href="https://forms.gle/bkFe31xxN9opn9SC6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#2D0F0F]/80 to-[#2D0F0F]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FF6F3C]/40 hover:border-[#FF6F3C]/70 transition-all duration-300 hover:shadow-[#FF6F3C]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FF6F3C]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FF6F3C]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FF6F3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Email Signup</h3>
+                  <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-4">
+                    Get announcements about club events, DeCal classes, and socials
+                  </p>
+                  <div className="text-[#FF6F3C] text-sm font-medium group-hover:text-[#FFD54F] transition-colors">
+                    Sign Up →
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            {/* Discord */}
+            <a 
+              href="https://discord.gg/XVFXVC3rf8" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#2D0F0F]/80 to-[#2D0F0F]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FF6F3C]/40 hover:border-[#FF6F3C]/70 transition-all duration-300 hover:shadow-[#FF6F3C]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FF6F3C]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FF6F3C]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FF6F3C]" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5499-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Join Our Discord</h3>
+                  <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-4">
+                    Connect with fellow dancers, share music, and stay updated
+                  </p>
+                  <div className="text-[#FF6F3C] text-sm font-medium group-hover:text-[#FFD54F] transition-colors">
+                    Join Server →
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            {/* Linktree */}
+            <a 
+              href="https://linktr.ee/salsa_at_cal" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#2D0F0F]/80 to-[#2D0F0F]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FF6F3C]/40 hover:border-[#FF6F3C]/70 transition-all duration-300 hover:shadow-[#FF6F3C]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FF6F3C]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FF6F3C]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FF6F3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">All Our Links</h3>
+                  <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-4">
+                    Find everything you need in one place - social media, events, and more
+                  </p>
+                  <div className="text-[#FF6F3C] text-sm font-medium group-hover:text-[#FFD54F] transition-colors">
+                    Visit Linktree →
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </div>
