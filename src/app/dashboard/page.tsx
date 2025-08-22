@@ -141,7 +141,7 @@ export default function DashboardPage() {
                       title: nextEvent.title,
                       start: nextEvent.start,
                       location: nextEvent.location || 'TBD',
-                      type: 'event'
+                      type: 'lesson'
                     }}
                     rsvpStatus={rsvpStatus}
                     onRSVP={handleRSVP}
