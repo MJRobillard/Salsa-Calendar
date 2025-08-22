@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Image, Plus, Eye, Download, Heart, MessageCircle, Share2, Upload, Camera } from 'lucide-react';
 
 interface Photo {
@@ -26,40 +26,51 @@ export default function LatestPhotos({ thumbnails, onOpenGallery }: LatestPhotos
   const [uploadCaption, setUploadCaption] = useState('');
   const [uploadTags, setUploadTags] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [latestPhotos, setLatestPhotos] = useState<Photo[]>([]);
 
-  // Mock photos data - in production this would come from Firestore
-  const mockPhotos: Photo[] = [
-    {
-      id: '1',
-      url: thumbnails[0] || '/placeholder1.jpg',
-      caption: 'Amazing salsa performance at the Greek Theatre! 💃🕺',
-      uploadedBy: 'Maria G.',
-      uploadedAt: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-      likes: 24,
-      comments: 8,
-      tags: ['salsa', 'performance', 'greek-theatre']
-    },
-    {
-      id: '2',
-      url: thumbnails[1] || '/placeholder2.jpg',
-      caption: 'Bachata social night - great vibes! 🎵',
-      uploadedBy: 'Carlos R.',
-      uploadedAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-      likes: 18,
-      comments: 5,
-      tags: ['bachata', 'social', 'dance']
-    },
-    {
-      id: '3',
-      url: thumbnails[2] || '/placeholder3.jpg',
-      caption: 'Cumbia workshop with amazing instructors 🎭',
-      uploadedBy: 'Ana S.',
-      uploadedAt: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
-      likes: 31,
-      comments: 12,
-      tags: ['cumbia', 'workshop', 'learning']
-    }
-  ];
+  // Get the latest 3 photos from the media section
+  useEffect(() => {
+    // Mock media data from the media section - in production this would come from Firestore
+    const mediaPhotos = [
+      {
+        id: '1',
+        url: '/dance_classes.png',
+        caption: 'Beginner Salsa Class - Fall 2024',
+        uploadedBy: 'Sofia Cielak',
+        uploadedAt: new Date('2024-09-15').toISOString(),
+        likes: 24,
+        comments: 8,
+        tags: ['decal', 'beginner', 'salsa']
+      },
+      {
+        id: '2',
+        url: '/Team.png',
+        caption: 'Performance Team Practice',
+        uploadedBy: 'Kathy Reyes',
+        uploadedAt: new Date('2024-09-10').toISOString(),
+        likes: 18,
+        comments: 5,
+        tags: ['performance', 'team', 'practice']
+      },
+      {
+        id: '3',
+        url: '/image.png',
+        caption: 'Open Practica Session',
+        uploadedBy: 'Tristan Soto Moreno',
+        uploadedAt: new Date('2024-09-08').toISOString(),
+        likes: 31,
+        comments: 12,
+        tags: ['open-practica', 'social', 'dancing']
+      }
+    ];
+
+    // Sort by upload date and take the last 3
+    const sortedPhotos = mediaPhotos
+      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())
+      .slice(0, 3);
+
+    setLatestPhotos(sortedPhotos);
+  }, []);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -137,7 +148,7 @@ export default function LatestPhotos({ thumbnails, onOpenGallery }: LatestPhotos
 
         {/* Photo Grid */}
         <div className="grid grid-cols-1 gap-4 mb-4">
-          {mockPhotos.map((photo) => (
+          {latestPhotos.map((photo) => (
             <div
               key={photo.id}
               className="group cursor-pointer"
