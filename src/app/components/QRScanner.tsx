@@ -34,14 +34,17 @@ export default function QRScanner({ onScanComplete, onClose }: QRScannerProps) {
       setIsScanning(true);
       setError(null);
 
-      // First, explicitly request camera permission
+      // Try to get available cameras and prioritize front camera
+      let videoConstraints = { 
+        facingMode: 'user', // Prioritize front camera
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      };
+
+      // First, try to get camera permission with front camera preference
       try {
         await navigator.mediaDevices.getUserMedia({ 
-          video: { 
-            facingMode: 'environment', // Use back camera on mobile
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          } 
+          video: videoConstraints
         });
       } catch (permissionError: any) {
         if (permissionError.name === 'NotAllowedError') {
@@ -52,6 +55,20 @@ export default function QRScanner({ onScanComplete, onClose }: QRScannerProps) {
           setError('No camera found on this device.');
           setIsScanning(false);
           return;
+        } else if (permissionError.name === 'OverconstrainedError') {
+          // If front camera fails, try any available camera
+          try {
+            await navigator.mediaDevices.getUserMedia({ 
+              video: { 
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+              } 
+            });
+          } catch (fallbackError: any) {
+            setError('Failed to access any camera. Please check your device and try again.');
+            setIsScanning(false);
+            return;
+          }
         } else {
           setError('Failed to access camera. Please check your device and try again.');
           setIsScanning(false);
@@ -111,6 +128,9 @@ export default function QRScanner({ onScanComplete, onClose }: QRScannerProps) {
   };
 
   useEffect(() => {
+    // Auto-start scanner when component mounts
+    startScanner();
+    
     return () => {
       stopScanner();
     };
