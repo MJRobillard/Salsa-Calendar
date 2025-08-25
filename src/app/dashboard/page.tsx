@@ -147,7 +147,7 @@ export default function DashboardPage() {
         />
         
         {/* Main Content */}
-        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
+        <div className="flex flex-col min-w-0 w-full pt-topbar">
           <TopBar 
             user={user} 
             onSidebarToggle={toggleSidebar}

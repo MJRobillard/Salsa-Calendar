@@ -42,6 +42,7 @@ export default function TopBar({ user, onSidebarToggle, isSidebarCollapsed, isMo
   return (
     <header className={`
       fixed top-0 left-0 right-0 z-50
+      topbar-fixed
       overflow-hidden bg-gradient-to-r from-brand-charcoal via-brand-paper to-brand-charcoal 
       border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4
       transform transition-transform duration-300 ease-in-out
@@ -50,9 +51,9 @@ export default function TopBar({ user, onSidebarToggle, isSidebarCollapsed, isMo
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className="relative flex items-center justify-between min-w-0">
+      <div className="relative flex items-center justify-between min-w-0 h-full">
         {/* Left side - Mobile Sidebar Toggle and Logo */}
-        <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+        <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1 h-full">
           {/* Mobile-only Sidebar Toggle */}
           <button
             onClick={onSidebarToggle}
@@ -80,13 +81,13 @@ export default function TopBar({ user, onSidebarToggle, isSidebarCollapsed, isMo
           </Link>
           
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg sm:text-xl font-semibold text-brand-gold truncate">Dashboard</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-brand-gold truncate">Salsa @ Cal </h2>
             <p className="hidden sm:block text-xs sm:text-sm text-brand-sand truncate">Welcome back, {user.displayName}</p>
           </div>
         </div>
 
         {/* Right side - User actions */}
-        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0 h-full">
           {/* Notifications - Hidden on mobile */}
           <button
             className="hidden sm:block p-1.5 sm:p-2 text-brand-sand hover:text-brand-gold hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm"

@@ -9,6 +9,8 @@
     --gold-primary: #FFD966;
     --gold-secondary: #B8860B;
     --dark-bg: #0A0F1C;
+    --topbar-height-mobile: 4rem; /* 64px */
+    --topbar-height-desktop: 5rem; /* 80px */
   }
 
   html {
@@ -58,6 +60,52 @@
   .overflow-prevent {
     overflow-x: hidden;
     max-width: 100%;
+  }
+
+  /* TopBar spacing utilities */
+  .pt-topbar-mobile {
+    padding-top: var(--topbar-height-mobile);
+  }
+  
+  .pt-topbar-desktop {
+    padding-top: var(--topbar-height-desktop);
+  }
+  
+  .pt-topbar {
+    padding-top: var(--topbar-height-mobile);
+  }
+  
+  @media (min-width: 640px) {
+    .pt-topbar {
+      padding-top: var(--topbar-height-desktop);
+    }
+  }
+
+  /* TopBar component styles */
+  .topbar-fixed {
+    height: var(--topbar-height-mobile);
+    z-index: 50;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  @media (min-width: 640px) {
+    .topbar-fixed {
+      height: var(--topbar-height-desktop);
+    }
+  }
+
+  /* Ensure content below TopBar is properly spaced */
+  .content-below-topbar {
+    margin-top: var(--topbar-height-mobile);
+  }
+  
+  @media (min-width: 640px) {
+    .content-below-topbar {
+      margin-top: var(--topbar-height-desktop);
+    }
   }
 
   /* Ensure text doesn't overflow */
