@@ -118,7 +118,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal text-white overflow-x-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
@@ -147,10 +147,12 @@ export default function DashboardPage() {
                     onRSVP={handleRSVP}
                   />
                 ) : (
-                  <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold text-brand-gold mb-2">No Upcoming Events</h3>
-                      <p className="text-brand-sand">Check back later for upcoming Salsa @ Cal events!</p>
+                  <div className="golden-border">
+                    <div className="bg-darkBg p-6 rounded-xl">
+                      <div className="text-center">
+                        <h3 className="text-xl font-semibold text-brand-gold mb-2">No Upcoming Events</h3>
+                        <p className="text-brand-sand">Check back later for upcoming Salsa @ Cal events!</p>
+                      </div>
                     </div>
                   </div>
                 )}

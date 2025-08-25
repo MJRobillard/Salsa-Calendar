@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased touch-manipulation overflow-x-hidden max-w-full">
+      <body className="antialiased touch-manipulation overflow-x-hidden max-w-full bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000]">
         <FirebaseProvider>
           {children}
         </FirebaseProvider>

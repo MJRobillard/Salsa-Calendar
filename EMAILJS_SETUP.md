@@ -68,3 +68,4 @@ Replace these placeholders in `src/app/contact/page.tsx`:
 - Verify all IDs are correct
 - Make sure your email service is connected
 - Check spam folder for test emails
+

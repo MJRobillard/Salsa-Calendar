@@ -5,6 +5,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@700&family=Inter:wght@400;500&display=swap');
 
 @layer base {
+  :root {
+    --gold-primary: #FFD966;
+    --gold-secondary: #B8860B;
+    --dark-bg: #0A0F1C;
+  }
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-text-size-adjust: 100%;
@@ -89,6 +95,43 @@
     @apply p-4 sm:p-6;
     @apply transition-all duration-200;
     @apply w-full overflow-hidden;
+  }
+
+  /* Gold gradient card component */
+  .card-gold-gradient {
+    @apply rounded-xl2 p-[2px] relative;
+    background: linear-gradient(135deg, #FFD966, #B8860B);
+    box-shadow: 0 0 6px 2px #FFD966, 0 0 12px 4px #B8860B;
+  }
+
+  .card-gold-gradient::before {
+    content: '';
+    @apply absolute inset-0 rounded-xl2;
+    background: linear-gradient(135deg, #FFD966, #B8860B);
+    z-index: -1;
+  }
+
+  .card-gold-gradient-content {
+    @apply bg-[#0A0F1C] rounded-xl2 p-4 sm:p-6;
+    @apply relative z-10;
+  }
+
+  /* Gold gradient border utility */
+  .border-gold-gradient {
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, 
+                linear-gradient(135deg, var(--gold-primary), var(--gold-secondary)) border-box;
+    box-shadow: 0 0 6px 2px var(--gold-primary), 0 0 12px 4px var(--gold-secondary);
+  }
+
+  /* Global Golden Edge utility - primary implementation */
+  .golden-border {
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, 
+                linear-gradient(135deg, var(--gold-primary), var(--gold-secondary)) border-box;
+    box-shadow: 0 0 6px 2px var(--gold-primary), 0 0 12px 4px var(--gold-secondary);
   }
 
   /* Mobile-optimized button component */
