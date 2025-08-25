@@ -24,10 +24,17 @@ export default function AboutPage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const toggleMobileNav = () => {
-    console.log('About: Mobile nav toggle clicked, current state:', isMobileNavOpen);
-    setIsMobileNavOpen(!isMobileNavOpen);
+  // Unified sidebar toggle function
+  const toggleSidebar = () => {
+    if (window.innerWidth < 768) {
+      // Mobile: toggle mobile nav
+      setIsMobileNavOpen(!isMobileNavOpen);
+    } else {
+      // Desktop: toggle sidebar collapse
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
   };
 
   useEffect(() => {
@@ -57,13 +64,25 @@ export default function AboutPage() {
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className="flex flex-row w-full overflow-hidden relative z-10">
+      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
+        isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : 'md:grid-cols-[256px_1fr]'
+      }`}>
         {/* Sidebar */}
-        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
+        <Sidebar 
+          isOpen={isMobileNavOpen} 
+          onToggle={() => setIsMobileNavOpen(false)}
+          isCollapsed={isSidebarCollapsed}
+          onCollapseToggle={toggleSidebar}
+        />
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
+        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
+          <TopBar 
+            user={user} 
+            onSidebarToggle={toggleSidebar}
+            isSidebarCollapsed={isSidebarCollapsed}
+            isMobileNavOpen={isMobileNavOpen}
+          />
           
           {/* About Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">

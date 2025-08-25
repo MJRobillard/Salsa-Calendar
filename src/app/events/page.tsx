@@ -24,10 +24,17 @@ export default function EventsPage() {
   const [nextEvent, setNextEvent] = useState<SalsaEvent | null>(null);
   const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const toggleMobileNav = () => {
-    console.log('Events: Mobile nav toggle clicked, current state:', isMobileNavOpen);
-    setIsMobileNavOpen(!isMobileNavOpen);
+  // Unified sidebar toggle function
+  const toggleSidebar = () => {
+    if (window.innerWidth < 768) {
+      // Mobile: toggle mobile nav
+      setIsMobileNavOpen(!isMobileNavOpen);
+    } else {
+      // Desktop: toggle sidebar collapse
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
   };
 
   // Function to handle when events are loaded from SalsaCalEvents
@@ -121,15 +128,29 @@ export default function EventsPage() {
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className="flex flex-row w-full overflow-hidden relative z-10">
+      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
+        user && isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : user ? 'md:grid-cols-[256px_1fr]' : 'md:grid-cols-1fr'
+      }`}>
         {/* Sidebar - Only show for logged-in users */}
-        {user && <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />}
+        {user && (
+          <Sidebar 
+            isOpen={isMobileNavOpen} 
+            onToggle={() => setIsMobileNavOpen(false)}
+            isCollapsed={isSidebarCollapsed}
+            onCollapseToggle={toggleSidebar}
+          />
+        )}
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0 w-full">
+        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
           {/* TopBar - Only show for logged-in users */}
           {user ? (
-            <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
+            <TopBar 
+              user={user} 
+              onSidebarToggle={toggleSidebar}
+              isSidebarCollapsed={isSidebarCollapsed}
+              isMobileNavOpen={isMobileNavOpen}
+            />
           ) : (
             <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between min-w-0">

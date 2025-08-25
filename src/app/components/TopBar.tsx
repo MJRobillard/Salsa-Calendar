@@ -7,11 +7,12 @@ import Link from 'next/link';
 
 interface TopBarProps {
   user: any;
-  onMobileNavToggle?: () => void;
+  onSidebarToggle?: () => void;
+  isSidebarCollapsed?: boolean;
   isMobileNavOpen?: boolean;
 }
 
-export default function TopBar({ user, onMobileNavToggle, isMobileNavOpen }: TopBarProps) {
+export default function TopBar({ user, onSidebarToggle, isSidebarCollapsed, isMobileNavOpen }: TopBarProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -50,16 +51,20 @@ export default function TopBar({ user, onMobileNavToggle, isMobileNavOpen }: Top
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
       <div className="relative flex items-center justify-between min-w-0">
-        {/* Left side - Mobile Nav Toggle and Logo */}
+        {/* Left side - Mobile Sidebar Toggle and Logo */}
         <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-          {/* Mobile Navigation Toggle */}
+          {/* Mobile-only Sidebar Toggle */}
           <button
-            onClick={onMobileNavToggle}
+            onClick={onSidebarToggle}
             className="md:hidden p-2 text-brand-gold hover:text-white hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm border border-brand-maroon/30 cursor-pointer z-10 relative pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
-            aria-label="Toggle mobile navigation"
+            aria-label="Toggle mobile sidebar"
           >
-            {isMobileNavOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMobileNavOpen ? (
+              <X size={20} />
+            ) : (
+              <Menu size={20} />
+            )}
           </button>
 
           {/* Logo - Clickable to dashboard */}

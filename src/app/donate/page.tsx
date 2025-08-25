@@ -11,19 +11,26 @@ export default function DonatePage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const toggleMobileNav = () => {
-    console.log('Mobile nav toggle clicked, current state:', isMobileNavOpen);
-    setIsMobileNavOpen(!isMobileNavOpen);
+  // Unified sidebar toggle function
+  const toggleSidebar = () => {
+    if (window.innerWidth < 768) {
+      // Mobile: toggle mobile nav
+      setIsMobileNavOpen(!isMobileNavOpen);
+    } else {
+      // Desktop: toggle sidebar collapse
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
   };
 
   // Debug logging
-  console.log('DonatePage render - isMobileNavOpen:', isMobileNavOpen, 'toggleMobileNav function:', !!toggleMobileNav);
+  console.log('DonatePage render - isMobileNavOpen:', isMobileNavOpen, 'toggleMobileNav function:', !!toggleSidebar);
 
   // Debug: Log the props being passed to TopBar
   console.log('Passing to TopBar:', { 
     user: !!user, 
-    onMobileNavToggle: !!toggleMobileNav, 
+    onMobileNavToggle: !!toggleSidebar, 
     isMobileNavOpen 
   });
 
@@ -54,16 +61,24 @@ export default function DonatePage() {
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className="flex flex-row w-full overflow-hidden relative z-10">
+      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
+        isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : 'md:grid-cols-[256px_1fr]'
+      }`}>
         {/* Sidebar */}
-        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
+        <Sidebar 
+          isOpen={isMobileNavOpen} 
+          onToggle={() => setIsMobileNavOpen(false)}
+          isCollapsed={isSidebarCollapsed}
+          onCollapseToggle={toggleSidebar}
+        />
         
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-w-0 w-full">
+        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
           <TopBar 
             user={user} 
-            onMobileNavToggle={toggleMobileNav} 
-            isMobileNavOpen={isMobileNavOpen} 
+            onSidebarToggle={toggleSidebar}
+            isSidebarCollapsed={isSidebarCollapsed}
+            isMobileNavOpen={isMobileNavOpen}
           />
           
           {/* Donate Content */}
@@ -87,8 +102,8 @@ export default function DonatePage() {
               </div>
 
               {/* Quick Donation Section */}
-              <div className="golden-border mb-8">
-                <div className="bg-darkBg rounded-xl p-6 sm:p-8">
+              <div className="mb-8">
+                <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] rounded-xl p-6 sm:p-8 border border-brand-gold">
                   <div className="text-center">
                     <h2 className="text-2xl sm:text-3xl font-bold text-brand-gold mb-4">Make a Quick Donation</h2>
                     <p className="text-brand-sand mb-6">Support our mission with a direct contribution</p>
@@ -121,8 +136,8 @@ export default function DonatePage() {
               </div>
 
               {/* Donation FAQ */}
-              <div className="golden-border mb-8">
-                <div className="bg-darkBg rounded-xl p-6 sm:p-8">
+              <div className="mb-8">
+                <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] rounded-xl p-6 sm:p-8 border border-brand-gold">
                   <h2 className="text-3xl sm:text-4xl font-bold text-brand-gold mb-8 text-center">
                     Salsa at Cal Donation FAQ
                   </h2>
@@ -138,7 +153,7 @@ export default function DonatePage() {
                   </p>
                   
                   <div className="space-y-4">
-                    <div className="bg-brand-charcoal/50 p-4 rounded-xl border border-brand-maroon/20">
+                    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 rounded-xl border border-brand-gold">
                       <h4 className="text-lg font-semibold text-brand-gold mb-2">ASUC Grants and Allocations</h4>
                       <p className="text-brand-sand">
                         We regularly apply for and receive grants from the Associated Students of the University of California (ASUC). 

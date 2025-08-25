@@ -13,7 +13,9 @@ import {
   Mail, 
   Settings,
   User,
-  Heart
+  Heart,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -25,6 +27,8 @@ interface SidebarItem {
 interface SidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  isCollapsed?: boolean;
+  onCollapseToggle?: () => void;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -37,7 +41,7 @@ const sidebarItems: SidebarItem[] = [
   { icon: <Settings size={20} />, label: 'Settings', href: '/settings' },
 ];
 
-export default function Sidebar({ isOpen = false, onToggle }: SidebarProps) {
+export default function Sidebar({ isOpen = false, onToggle, isCollapsed = false, onCollapseToggle }: SidebarProps) {
   const pathname = usePathname();
 
   const closeSidebar = () => {
@@ -50,21 +54,27 @@ export default function Sidebar({ isOpen = false, onToggle }: SidebarProps) {
     <>
       {/* Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-[60]
+        fixed md:sticky md:top-0 inset-y-0 left-0 z-[60]
         w-72 md:w-64 overflow-y-auto overflow-x-hidden
-        transform transition-transform duration-300 ease-in-out
+        transform transition-all duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        md:h-screen md:max-h-screen
+        ${isCollapsed ? 'md:w-12' : 'md:w-64'}
       `}>
         {/* Main sidebar container with dark blue gradient */}
-        <div className="h-full">
-          <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] h-full rounded-xl border border-brand-gold">
+        <div className="h-full md:h-screen md:max-h-screen">
+          <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] h-full md:h-screen md:max-h-screen rounded-xl border border-brand-gold flex flex-col">
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none rounded-xl"></div>
             
             {/* Logo/Brand - Clickable to dashboard */}
-            <div className="relative p-4 md:p-6 border-b border-brand-maroon/30">
-              <Link href="/dashboard" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-200">
-                <div className="relative w-8 h-8 md:w-10 md:h-10">
+            <div className={`relative p-4 md:p-6 border-b border-brand-maroon/30 flex-shrink-0 ${
+              isCollapsed ? 'md:flex md:justify-center md:p-2' : ''
+            }`}>
+              <Link href="/dashboard" className={`flex items-center hover:scale-105 transition-transform duration-200 ${
+                isCollapsed ? 'md:justify-center' : 'space-x-3'
+              }`}>
+                <div className={`relative ${isCollapsed ? 'w-6 h-6 md:w-8 md:h-8' : 'w-8 h-8 md:w-10 md:h-10'}`}>
                   <Image 
                     src="/logo.png" 
                     alt="Salsa Club Logo" 
@@ -72,12 +82,14 @@ export default function Sidebar({ isOpen = false, onToggle }: SidebarProps) {
                     className="drop-shadow-lg"
                   />
                 </div>
-                <h1 className="text-xl md:text-2xl font-bold text-brand-gold">Salsa @ Cal</h1>
+                {!isCollapsed && (
+                  <h1 className="text-xl md:text-2xl font-bold text-brand-gold">Salsa @ Cal</h1>
+                )}
               </Link>
             </div>
 
             {/* Navigation Items */}
-            <nav className="relative p-3 md:p-4 space-y-1 md:space-y-2" role="navigation">
+            <nav className="relative p-3 md:p-4 space-y-1 md:space-y-2 flex-1" role="navigation">
               {sidebarItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -93,31 +105,61 @@ export default function Sidebar({ isOpen = false, onToggle }: SidebarProps) {
                         : 'text-brand-sand hover:bg-brand-maroon/20 hover:text-brand-gold border border-transparent hover:border-brand-maroon/20'
                       }
                       focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal
+                      ${isCollapsed ? 'md:justify-center md:px-1.5 md:py-2' : ''}
                     `}
                     tabIndex={0}
+                    title={isCollapsed ? item.label : undefined}
                   >
                     <span className={`
                       ${isActive ? 'text-brand-gold' : 'text-brand-sand group-hover:text-brand-gold'}
                       transition-colors duration-200
                     `}>
-                      {item.icon === <ImageIcon size={20} /> ? <ImageIcon size={18} className="md:w-5 md:h-5" /> : 
+                      {item.icon === <ImageIcon size={20} /> ? <ImageIcon size={isCollapsed ? 16 : 18} className="md:w-4 md:h-4" /> : 
                         React.cloneElement(item.icon as React.ReactElement, { 
-                          size: 18, 
-                          className: "md:w-5 md:h-5" 
+                          size: isCollapsed ? 16 : 18, 
+                          className: "md:w-4 md:h-4" 
                         })
                       }
                     </span>
-                    <span className="font-medium text-sm md:text-base">{item.label}</span>
+                    {!isCollapsed && (
+                      <span className="font-medium text-sm md:text-base">{item.label}</span>
+                    )}
                   </Link>
                 );
               })}
             </nav>
 
+            {/* Desktop-only Collapse Button */}
+            {onCollapseToggle && (
+              <div className="hidden md:block p-3 md:p-4 flex-shrink-0">
+                <button
+                  onClick={onCollapseToggle}
+                  className={`w-full flex items-center justify-center p-3 bg-brand-maroon/20 hover:bg-brand-maroon/40 text-brand-gold hover:text-white border border-brand-maroon/30 hover:border-brand-gold/50 rounded-lg transition-all duration-200 backdrop-blur-sm group ${
+                    isCollapsed ? 'md:p-2' : ''
+                  }`}
+                  aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                >
+                  <div className="flex items-center space-x-2">
+                    {isCollapsed ? (
+                      <ChevronRight size={isCollapsed ? 16 : 20} className="text-brand-gold group-hover:text-white transition-colors" />
+                    ) : (
+                      <>
+                        <ChevronLeft size={20} className="text-brand-gold group-hover:text-white transition-colors" />
+                        <span className="text-sm font-medium">Collapse</span>
+                      </>
+                    )}
+                  </div>
+                </button>
+              </div>
+            )}
+
             {/* Footer */}
-            <div className="relative absolute bottom-0 left-0 right-0 p-3 md:p-4 border-t border-brand-maroon/30">
-              <p className="text-xs md:text-sm text-brand-sand text-center">
-                Dance • Learn • Grow
-              </p>
+            <div className="relative p-3 md:p-4 border-t border-brand-maroon/30 flex-shrink-0">
+              {!isCollapsed && (
+                <p className="text-xs md:text-sm text-brand-sand text-center">
+                  Dance • Learn • Grow
+                </p>
+              )}
             </div>
           </div>
         </div>
