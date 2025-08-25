@@ -29,8 +29,8 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
 
   if (!event) {
     return (
-      <div className="golden-border w-full">
-        <div className="bg-darkBg p-4 sm:p-6 rounded-xl">
+      <div className="w-full">
+        <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl border border-brand-gold">
           <div className="text-center py-6 sm:py-8">
             {/* Logo - Clickable to dashboard */}
             <div className="flex justify-center mb-4 sm:mb-6">
@@ -113,8 +113,8 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
   };
 
   return (
-    <div className="golden-border w-full">
-      <div className="bg-darkBg p-4 sm:p-6 rounded-xl">
+    <div className="w-full">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl border border-brand-gold">
         {/* Logo in top-right corner */}
         <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 space-y-3 sm:space-y-0">
           <div className="flex-1 min-w-0">

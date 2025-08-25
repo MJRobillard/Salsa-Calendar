@@ -41,6 +41,12 @@ export default function MediaPage() {
   const [selectedEvent, setSelectedEvent] = useState<string>('all');
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Media: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   // Mock data - replace with real Firestore data
   const mockMedia: MediaItem[] = [
@@ -116,11 +122,11 @@ export default function MediaPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           
           {/* Media Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">

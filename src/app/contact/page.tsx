@@ -30,6 +30,12 @@ export default function ContactPage() {
     message: ''
   });
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Contact: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   useEffect(() => {
     if (!loading) {
@@ -104,11 +110,11 @@ export default function ContactPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           
           {/* Contact Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">

@@ -1,9 +1,8 @@
 'use client'
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import { Heart, DollarSign, Users, Calendar, Gift, Star, ArrowRight } from 'lucide-react';
@@ -11,6 +10,22 @@ import { Heart, DollarSign, Users, Calendar, Gift, Star, ArrowRight } from 'luci
 export default function DonatePage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
+
+  // Debug logging
+  console.log('DonatePage render - isMobileNavOpen:', isMobileNavOpen, 'toggleMobileNav function:', !!toggleMobileNav);
+
+  // Debug: Log the props being passed to TopBar
+  console.log('Passing to TopBar:', { 
+    user: !!user, 
+    onMobileNavToggle: !!toggleMobileNav, 
+    isMobileNavOpen 
+  });
 
   useEffect(() => {
     if (!loading) {
@@ -41,18 +56,22 @@ export default function DonatePage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar 
+            user={user} 
+            onMobileNavToggle={toggleMobileNav} 
+            isMobileNavOpen={isMobileNavOpen} 
+          />
           
           {/* Donate Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
             <div className="max-w-6xl mx-auto w-full">
               {/* Page Header */}
-              <div className="golden-border mb-8 sm:mb-12">
-                <div className="bg-darkBg rounded-xl p-6 sm:p-8">
+              <div className="mb-8 sm:mb-12">
+                <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] rounded-xl p-6 sm:p-8 border border-brand-gold">
                   <div className="text-center">
                     <div className="flex items-center justify-center mb-4">
                       <Heart className="w-12 h-12 text-brand-gold mr-4" />

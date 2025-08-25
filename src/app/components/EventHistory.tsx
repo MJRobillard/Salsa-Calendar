@@ -159,7 +159,7 @@ export default function EventHistory({ items }: EventHistoryProps) {
 
   if (!items || items.length === 0) {
     return (
-      <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
         <div className="flex items-center space-x-2 mb-6">
           <History size={24} className="text-brand-gold" />
           <h3 className="text-xl font-semibold text-brand-gold">Event History</h3>
@@ -175,7 +175,7 @@ export default function EventHistory({ items }: EventHistoryProps) {
   }
 
   return (
-    <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           <History size={24} className="text-brand-gold" />

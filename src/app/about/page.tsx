@@ -3,7 +3,7 @@
 import React from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import Image from 'next/image';
@@ -23,6 +23,12 @@ import {
 export default function AboutPage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('About: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   useEffect(() => {
     if (!loading) {
@@ -53,11 +59,11 @@ export default function AboutPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           
           {/* About Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">

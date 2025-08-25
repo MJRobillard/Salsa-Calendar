@@ -148,7 +148,7 @@ export default function QRScanner({ onScanComplete, onClose }: QRScannerProps) {
   if (scanResult && scanTime) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-brand-charcoal rounded-lg border border-brand-maroon p-6 max-w-md w-full">
+        <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] rounded-lg border border-brand-gold p-6 max-w-md w-full">
           <div className="text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-brand-gold mb-2">
@@ -189,7 +189,7 @@ export default function QRScanner({ onScanComplete, onClose }: QRScannerProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-brand-charcoal rounded-lg border border-brand-maroon p-6 max-w-lg w-full">
+              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] rounded-lg border border-brand-gold p-6 max-w-lg w-full">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-brand-gold flex items-center space-x-2">
             <QrCode className="w-6 h-6" />

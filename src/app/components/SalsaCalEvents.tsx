@@ -151,7 +151,7 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
 
   if (error) {
     return (
-      <div className="bg-brand-maroon p-6 rounded-xl2 shadow-card">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
         <div className="text-center py-12">
           <Calendar size={48} className="text-brand-gold mx-auto mb-4 opacity-50" />
           <h3 className="text-xl font-semibold text-brand-gold mb-2">Unable to Load Events</h3>
@@ -183,7 +183,7 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
   }
 
   return (
-    <div className="bg-brand-maroon p-6 rounded-xl2 shadow-card">
+    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
       {/* Header */}
       <div className="flex items-center space-x-2 mb-6">
         <Calendar size={24} className="text-brand-gold" />
@@ -192,7 +192,7 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
 
       {/* Calendar Subscription Card */}
       {showCalendarCard && (
-        <div className="bg-brand-charcoal p-4 rounded-xl mb-6 border border-brand-gold/20 animate-fade-in">
+        <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 rounded-xl mb-6 border border-brand-gold animate-fade-in">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <p className="text-white text-sm mb-3">🎉 Never miss a beat! Add the Salsa @ Cal calendar to your Google Calendar.</p>
@@ -227,7 +227,7 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
           {events.map((event, index) => (
             <div
               key={event.id}
-              className="bg-brand-charcoal p-4 rounded-xl border border-brand-maroon/30 hover:border-brand-gold/50 transition-all duration-300 animate-fade-in"
+              className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 rounded-xl border border-brand-gold hover:border-brand-gold/80 transition-all duration-300 animate-fade-in"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <h4 className="text-brand-gold font-semibold mb-2 line-clamp-2">{event.title}</h4>

@@ -23,6 +23,12 @@ export default function EventsPage() {
   const router = useRouter();
   const [nextEvent, setNextEvent] = useState<SalsaEvent | null>(null);
   const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Events: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   // Function to handle when events are loaded from SalsaCalEvents
   const handleEventsLoaded = (events: SalsaEvent[]) => {
@@ -117,13 +123,13 @@ export default function EventsPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar - Only show for logged-in users */}
-        {user && <Sidebar />}
+        {user && <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />}
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
           {/* TopBar - Only show for logged-in users */}
           {user ? (
-            <TopBar user={user} />
+            <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           ) : (
             <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between min-w-0">

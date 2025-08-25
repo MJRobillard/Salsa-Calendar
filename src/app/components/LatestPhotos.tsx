@@ -130,7 +130,7 @@ export default function LatestPhotos({ thumbnails, onOpenGallery }: LatestPhotos
 
   return (
     <>
-      <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-2">
             <Image size={24} className="text-brand-gold" />
@@ -197,7 +197,7 @@ export default function LatestPhotos({ thumbnails, onOpenGallery }: LatestPhotos
         {/* Upload Modal */}
         {showUploadModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon max-w-md w-full mx-4">
+            <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold max-w-md w-full mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-brand-gold">Upload Photo</h4>
                 <button
@@ -291,7 +291,7 @@ export default function LatestPhotos({ thumbnails, onOpenGallery }: LatestPhotos
         {/* Photo Detail Modal */}
         {selectedPhoto && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-brand-gold">Photo Details</h4>
                 <button

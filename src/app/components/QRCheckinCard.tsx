@@ -166,7 +166,7 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   if (mode === 'show') {
     const qrData = generatePersonalQR();
     return (
-      <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold">
         <div className="text-center">
           <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
             <QrCode size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
@@ -192,7 +192,7 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   }
 
   return (
-    <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon">
+    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold">
       <div className="text-center">
         <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
           <Camera size={20} className="sm:w-6 sm:h-6 text-brand-gold" />

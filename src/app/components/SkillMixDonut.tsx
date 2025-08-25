@@ -158,7 +158,7 @@ export default function SkillMixDonut({ data }: SkillMixDonutProps) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+      <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
         <div className="flex items-center space-x-2 mb-6">
           <PieChart size={24} className="text-brand-gold" />
           <h3 className="text-xl font-semibold text-brand-gold">Skill Mix</h3>
@@ -174,7 +174,7 @@ export default function SkillMixDonut({ data }: SkillMixDonutProps) {
   }
 
   return (
-    <div className="bg-brand-charcoal p-6 rounded-xl2 shadow-card border border-brand-maroon">
+    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl2 shadow-card border border-brand-gold">
       <div className="flex items-center space-x-2 mb-6">
         <PieChart size={24} className="text-brand-gold" />
         <h3 className="text-xl font-semibold text-brand-gold">Skill Mix</h3>

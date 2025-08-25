@@ -81,8 +81,8 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-20 sm:mb-24 lg:mb-32">
           {/* RSO Section */}
           <a href="/about" className="group">
-            <div className="golden-border overflow-hidden">
-              <div className="bg-darkBg p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300">
+            <div className="overflow-hidden">
+              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
                 <div className="relative">
                   {/* RSO Group Photo - Top Half */}
                   <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
@@ -107,8 +107,8 @@ export default function HomePage() {
           
           {/* DeCal Section */}
           <a href="/about" className="group">
-            <div className="golden-border overflow-hidden">
-              <div className="bg-darkBg p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300">
+            <div className="overflow-hidden">
+              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
                 <div className="relative">
                   {/* DeCal Dance Instruction Photo - Top Half */}
                   <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
@@ -133,8 +133,8 @@ export default function HomePage() {
           
           {/* Competitive Team Section */}
           <a href="/about" className="group">
-            <div className="golden-border overflow-hidden md:col-span-2 lg:col-span-1">
-              <div className="bg-darkBg p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300">
+            <div className="overflow-hidden md:col-span-2 lg:col-span-1">
+              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
                 <div className="relative">
                   {/* Competitive Team Performance Photo - Top Half */}
                   <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
@@ -181,8 +181,8 @@ export default function HomePage() {
         </div> */}
 
         {/* Upcoming Events Section */}
-        <div className="golden-border mb-20 sm:mb-24 lg:mb-32">
-          <div className="bg-darkBg p-8 sm:p-10 lg:p-12 rounded-xl shadow-2xl backdrop-blur-sm">
+                  <div className="mb-20 sm:mb-24 lg:mb-32">
+          <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-8 sm:p-10 lg:p-12 rounded-xl shadow-2xl backdrop-blur-sm border border-brand-gold">
             <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between">
               <div className="lg:flex-1 mb-8 lg:mb-0">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Upcoming Events</h2>

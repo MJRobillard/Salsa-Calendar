@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
@@ -12,8 +12,6 @@ import {
   Info, 
   Mail, 
   Settings,
-  Menu,
-  X,
   User,
   Heart
 } from 'lucide-react';
@@ -22,6 +20,11 @@ interface SidebarItem {
   icon: React.ReactNode;
   label: string;
   href: string;
+}
+
+interface SidebarProps {
+  isOpen?: boolean;
+  onToggle?: () => void;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -34,42 +37,27 @@ const sidebarItems: SidebarItem[] = [
   { icon: <Settings size={20} />, label: 'Settings', href: '/settings' },
 ];
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Sidebar({ isOpen = false, onToggle }: SidebarProps) {
   const pathname = usePathname();
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
-  const closeSidebar = () => setIsOpen(false);
+  const closeSidebar = () => {
+    if (isOpen && onToggle) {
+      onToggle();
+    }
+  };
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button
-        onClick={toggleSidebar}
-        className="md:hidden fixed top-4 left-1/2 transform -translate-x-1/2 z-50 p-2 bg-brand-charcoal/90 backdrop-blur-sm text-brand-gold rounded-lg border border-brand-maroon hover:bg-brand-maroon transition-colors shadow-lg"
-        aria-label="Toggle sidebar"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      {/* Mobile Tooltip */}
-      {isOpen && (
-        <div className="md:hidden fixed top-16 left-1/2 transform -translate-x-1/2 z-50 bg-brand-charcoal/95 backdrop-blur-sm text-brand-gold px-3 py-2 rounded-lg border border-brand-maroon shadow-lg text-sm font-medium">
-          Use this to navigate on mobile
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-brand-charcoal/95"></div>
-        </div>
-      )}
-
       {/* Sidebar */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-50
+        fixed md:static inset-y-0 left-0 z-[60]
         w-72 md:w-64 overflow-y-auto overflow-x-hidden
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        {/* Main sidebar container with golden border */}
-        <div className="golden-border h-full">
-          <div className="bg-darkBg h-full rounded-xl">
+        {/* Main sidebar container with dark blue gradient */}
+        <div className="h-full">
+          <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] h-full rounded-xl border border-brand-gold">
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none rounded-xl"></div>
             
@@ -138,7 +126,7 @@ export default function Sidebar() {
       {/* Mobile Overlay */}
       {isOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
+          className="md:hidden fixed inset-0 bg-black/60 z-[55] backdrop-blur-sm"
           onClick={closeSidebar}
           aria-hidden="true"
         />

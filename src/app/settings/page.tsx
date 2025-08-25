@@ -61,6 +61,12 @@ export default function SettingsPage() {
     }
   });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Settings: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   const danceStyles = [
     { id: 'salsa', label: 'Salsa', description: 'LA Style Salsa (on "the one")' },
@@ -165,11 +171,11 @@ export default function SettingsPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           
           {/* Settings Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">

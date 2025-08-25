@@ -28,6 +28,12 @@ export default function DashboardPage() {
   const router = useRouter();
   const [nextEvent, setNextEvent] = useState<SalsaEvent | null>(null);
   const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  const toggleMobileNav = () => {
+    console.log('Dashboard: Mobile nav toggle clicked, current state:', isMobileNavOpen);
+    setIsMobileNavOpen(!isMobileNavOpen);
+  };
 
   useEffect(() => {
     if (!loading) {
@@ -124,11 +130,11 @@ export default function DashboardPage() {
       
       <div className="flex flex-row w-full overflow-hidden relative z-10">
         {/* Sidebar */}
-        <Sidebar />
+        <Sidebar isOpen={isMobileNavOpen} onToggle={toggleMobileNav} />
         
         {/* Main Content */}
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <TopBar user={user} />
+          <TopBar user={user} onMobileNavToggle={toggleMobileNav} isMobileNavOpen={isMobileNavOpen} />
           
           {/* Dashboard Content */}
           <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
@@ -147,8 +153,8 @@ export default function DashboardPage() {
                     onRSVP={handleRSVP}
                   />
                 ) : (
-                  <div className="golden-border">
-                    <div className="bg-darkBg p-6 rounded-xl">
+                  <div className="w-full">
+                    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 rounded-xl border border-brand-gold">
                       <div className="text-center">
                         <h3 className="text-xl font-semibold text-brand-gold mb-2">No Upcoming Events</h3>
                         <p className="text-brand-sand">Check back later for upcoming Salsa @ Cal events!</p>
