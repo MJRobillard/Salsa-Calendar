@@ -50,12 +50,25 @@ export default function HomePage() {
           </p>
           
           {!user ? (
-            <button
-              onClick={signIn}
-              className="bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-12 sm:px-16 py-5 sm:py-6 rounded-2xl font-bold text-xl sm:text-2xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm"
-            >
-              Join Salsa @ Cal
-            </button>
+            <div className="space-y-6">
+              <button
+                onClick={signIn}
+                className="bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-12 sm:px-16 py-5 sm:py-6 rounded-2xl font-bold text-xl sm:text-2xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm"
+              >
+                Sign in to see your dashboard
+              </button>
+              <div>
+                <a
+                  href="/events"
+                  className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform"
+                >
+                  <span>View Events</span>
+                  <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            </div>
           ) : (
             <div className="space-y-6 sm:space-y-8">
               <p className="text-white/95 text-lg sm:text-xl">Welcome back, {user.displayName}!</p>
@@ -180,30 +193,7 @@ export default function HomePage() {
           </div>
         </div> */}
 
-        {/* Upcoming Events Section */}
-                  <div className="mb-20 sm:mb-24 lg:mb-32">
-          <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-8 sm:p-10 lg:p-12 rounded-xl shadow-2xl backdrop-blur-sm border border-brand-gold">
-            <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between">
-              <div className="lg:flex-1 mb-8 lg:mb-0">
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Upcoming Events</h2>
-                <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-3xl">
-                  View all upcoming Salsa @ Cal events and activities
-                </p>
-              </div>
-              <div className="lg:flex-shrink-0">
-                <a
-                  href="/events"
-                  className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-10 sm:px-12 py-5 sm:py-6 rounded-2xl font-bold text-lg sm:text-xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-[#FFD54F]/50 backdrop-blur-sm"
-                >
-                  <span>View Events</span>
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         {/* Community Links Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm">
