@@ -280,7 +280,7 @@ export default function EventsPage() {
                         className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base"
                       >
                         <ExternalLink size={16} />
-                        <span>View Details</span>
+                        <span>Add to calendar</span>
                       </button>
                       <button 
                         onClick={addToCalendar}

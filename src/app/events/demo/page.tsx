@@ -45,7 +45,7 @@ export default function EventsDemoPage() {
             <li>Navigate to <code className="bg-brand-maroon px-2 py-1 rounded">/events</code> in your app</li>
             <li>The page will show the next upcoming event from the Salsa @ Cal calendar</li>
             <li>Use RSVP buttons to indicate your attendance</li>
-            <li>Click "View Details" to open the event in Google Calendar</li>
+            <li>Click "Add to calendar" to open the event in Google Calendar</li>
             <li>Click "Download Calendar Now" to download an ICS file</li>
             <li>Below shows all upcoming events from the calendar feed</li>
           </ol>
