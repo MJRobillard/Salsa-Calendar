@@ -54,13 +54,14 @@ export default function Sidebar({ isOpen = false, onToggle, isCollapsed = false,
     <>
       {/* Sidebar */}
       <aside className={`
-        fixed md:sticky md:top-0 inset-y-0 left-0 z-[60]
+        fixed md:relative md:top-0 inset-y-0 left-0 z-[60]
         w-72 md:w-64 overflow-y-auto overflow-x-hidden
         transform transition-all duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        md:h-screen md:max-h-screen
-        ${isCollapsed ? 'md:w-12' : 'md:w-64'}
-      `}>
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isCollapsed ? 'md:-translate-x-full' : 'md:translate-x-0'}
+        md:h-screen md:max-h-screen flex-shrink-0
+        ${isCollapsed ? 'md:w-0' : 'md:w-64'}
+      `} aria-hidden={isCollapsed && !isOpen ? true : undefined}>
         {/* Main sidebar container with dark blue gradient */}
         <div className="h-full md:h-screen md:max-h-screen">
           <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] h-full md:h-screen md:max-h-screen rounded-xl border border-brand-gold flex flex-col">
@@ -105,7 +106,7 @@ export default function Sidebar({ isOpen = false, onToggle, isCollapsed = false,
                         : 'text-brand-sand hover:bg-brand-maroon/20 hover:text-brand-gold border border-transparent hover:border-brand-maroon/20'
                       }
                       focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal
-                      ${isCollapsed ? 'md:justify-center md:px-1.5 md:py-2' : ''}
+                      ${isCollapsed ? 'md:justify-center md:px-2 md:py-2' : ''}
                     `}
                     tabIndex={0}
                     title={isCollapsed ? item.label : undefined}
@@ -141,7 +142,7 @@ export default function Sidebar({ isOpen = false, onToggle, isCollapsed = false,
                 >
                   <div className="flex items-center space-x-2">
                     {isCollapsed ? (
-                      <ChevronRight size={isCollapsed ? 16 : 20} className="text-brand-gold group-hover:text-white transition-colors" />
+                      <ChevronRight size={16} className="text-brand-gold group-hover:text-white transition-colors" />
                     ) : (
                       <>
                         <ChevronLeft size={20} className="text-brand-gold group-hover:text-white transition-colors" />

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { User, Settings, Bell, Menu, X } from 'lucide-react';
+import { User, Settings, Bell, Menu, X, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -67,6 +67,17 @@ export default function TopBar({ user, onSidebarToggle, isSidebarCollapsed, isMo
               <Menu size={20} />
             )}
           </button>
+
+          {/* Desktop-only Expand Sidebar Button (shows when collapsed) */}
+          {isSidebarCollapsed && (
+            <button
+              onClick={onSidebarToggle}
+              className="hidden md:flex p-2 text-brand-gold hover:text-white hover:bg-brand-maroon/20 rounded-lg transition-colors backdrop-blur-sm border border-brand-maroon/30"
+              aria-label="Expand sidebar"
+            >
+              <ChevronRight size={20} />
+            </button>
+          )}
 
           {/* Logo - Clickable to dashboard */}
           <Link href="/dashboard" className="hover:scale-105 transition-transform duration-200 flex-shrink-0">

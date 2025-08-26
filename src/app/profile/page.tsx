@@ -117,9 +117,7 @@ export default function ProfilePage() {
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
-        isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : 'md:grid-cols-[256px_1fr]'
-      }`}>
+      <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar */}
         <Sidebar 
           isOpen={isMobileNavOpen} 
@@ -129,7 +127,7 @@ export default function ProfilePage() {
         />
         
         {/* Main Content */}
-        <div className="flex flex-col min-w-0 w-full pt-topbar">
+        <div className="flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out">
           <TopBar 
             user={user} 
             onSidebarToggle={toggleSidebar}
