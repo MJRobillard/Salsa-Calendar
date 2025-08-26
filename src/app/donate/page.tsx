@@ -152,7 +152,10 @@ export default function DonatePage() {
                             <td className="border border-brand-maroon/30 p-3">$3,000</td>
                           </tr>
                           <tr className="border-b border-brand-maroon/20">
-                            <td className="border border-brand-maroon/30 p-3 font-semibold text-brand-gold">Performance Team</td>
+                            <td className="border border-brand-maroon/30 p-3 font-semibold text-brand-gold">
+                              Performance Team
+                              <span className="ml-2 align-middle text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-brand-gold/10 text-brand-gold border border-brand-gold/30">Ideal</span>
+                            </td>
                             <td className="border border-brand-maroon/30 p-3">Costumes, coaching, competition expenses, studio rentals</td>
                             <td className="border border-brand-maroon/30 p-3">$2,580</td>
                           </tr>
@@ -169,6 +172,7 @@ export default function DonatePage() {
                         </tbody>
                       </table>
                     </div>
+                    <p className="mt-2 text-brand-sand text-xs italic">Rows marked "Ideal" indicate target budgets rather than confirmed expenses.</p>
                   </div>
                 </div>
               </div>

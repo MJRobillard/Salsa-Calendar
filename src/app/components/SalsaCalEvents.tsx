@@ -251,14 +251,14 @@ export default function SalsaCalEvents({ maxEvents = 5, onEventsLoaded }: SalsaC
                 )}
               </div>
 
-              {/* Add to calendar Button */}
+              {/* Add event to Calendar Button */}
               <div className="mt-3 pt-3 border-t border-brand-maroon/30">
                 <button
                   onClick={() => openEventInGoogleCalendar(event)}
                   className="w-full px-3 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white text-sm rounded-lg hover:shadow-glow transition-all duration-300 flex items-center justify-center space-x-2"
                 >
                   <ExternalLink size={14} />
-                  <span>Add to calendar</span>
+                  <span>Add event to Calendar</span>
                 </button>
               </div>
             </div>

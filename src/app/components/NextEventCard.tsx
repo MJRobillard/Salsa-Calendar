@@ -104,7 +104,7 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
   };
 
   const addToGoogleCalendar = (event: Event) => {
-    // Create a Google Calendar event creation URL (same as Add to calendar for now)
+    // Create a Google Calendar event creation URL (same as Add event to Calendar for now)
     const startDate = event.start.toISOString().slice(0, 16).replace(/:/g, '');
     const endDate = new Date(event.start.getTime() + 60 * 60 * 1000).toISOString().slice(0, 16).replace(/:/g, ''); // Default 1 hour duration
     
@@ -194,7 +194,7 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
             className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center justify-center sm:justify-start space-x-2 backdrop-blur-sm hover:bg-brand-maroon/10 rounded-lg text-sm sm:text-base"
           >
             <ExternalLink size={16} />
-            <span>Add to calendar</span>
+            <span>Add event to Calendar</span>
           </button>
           <button 
             onClick={() => addToGoogleCalendar(event)}

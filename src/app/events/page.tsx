@@ -21,7 +21,6 @@ interface SalsaEvent {
 export default function EventsPage() {
   const { user, loading, signIn } = useFirebase();
   const router = useRouter();
-  const [nextEvent, setNextEvent] = useState<SalsaEvent | null>(null);
   const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -37,12 +36,7 @@ export default function EventsPage() {
     }
   };
 
-  // Function to handle when events are loaded from SalsaCalEvents
-  const handleEventsLoaded = (events: SalsaEvent[]) => {
-    if (events.length > 0) {
-      setNextEvent(events[0]); // First event is the next upcoming event
-    }
-  };
+  // Removed next event selection from events list per request
 
   const handleRSVP = async (status: 'going' | 'interested' | 'not_going') => {
     if (!user) {
@@ -58,46 +52,9 @@ export default function EventsPage() {
     console.log('RSVP status updated:', status);
   };
 
-  const viewEventDetails = () => {
-    if (nextEvent) {
-      // Create a Google Calendar event creation URL with event details
-      const startDate = nextEvent.start.toISOString().slice(0, 16).replace(/:/g, '');
-      const endDate = nextEvent.end.toISOString().slice(0, 16).replace(/:/g, '');
-      
-      const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(nextEvent.title)}&dates=${startDate}/${endDate}&location=${encodeURIComponent(nextEvent.location || '')}&details=${encodeURIComponent(nextEvent.description || '')}`;
-      window.open(googleCalendarUrl, '_blank');
-    }
-  };
+  // Removed viewEventDetails for Next Event
 
-  const addToCalendar = () => {
-    if (nextEvent) {
-      // Create ICS file for download
-      const icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//SalsaCal//Salsa @ Cal Events//EN',
-        'BEGIN:VEVENT',
-        `UID:${nextEvent.id}`,
-        `DTSTART:${nextEvent.start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-        `DTEND:${nextEvent.end.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`,
-        `SUMMARY:${nextEvent.title}`,
-        nextEvent.location ? `LOCATION:${nextEvent.location}` : '',
-        nextEvent.description ? `DESCRIPTION:${nextEvent.description}` : '',
-        'END:VEVENT',
-        'END:VCALENDAR'
-      ].filter(line => line !== '').join('\r\n');
-
-      const blob = new Blob([icsContent], { type: 'text/calendar' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${nextEvent.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }
-  };
+  // Removed addToCalendar for Next Event
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('en-US', { 
@@ -205,99 +162,12 @@ export default function EventsPage() {
                 )}
               </div>
 
-              {/* Next Event Section */}
-              {nextEvent && (
-                <div className="mb-6 sm:mb-8 w-full">
-                  <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">Next Event</h2>
-                  <div className="bg-brand-charcoal p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-maroon w-full">
-                    {/* Event Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 space-y-3 sm:space-y-0">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl sm:text-2xl font-bold text-brand-gold mb-2 break-words">{nextEvent.title}</h3>
-                        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-brand-sand text-sm sm:text-base">
-                          <div className="flex items-center space-x-2">
-                            <Calendar size={16} />
-                            <span>{formatDate(nextEvent.start)}</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Clock size={16} />
-                            <span>{formatTime(nextEvent.start)} - {formatTime(nextEvent.end)}</span>
-                          </div>
-                          {nextEvent.location && (
-                            <div className="flex items-center space-x-2">
-                              <MapPin size={16} />
-                              <span className="break-words">{nextEvent.location}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 text-brand-gold self-start sm:self-auto flex-shrink-0">
-                        Upcoming
-                      </span>
-                    </div>
-
-                    {/* RSVP Section - Only show for logged-in users */}
-                    {user && (
-                      <>
-                        <div className="border-t border-brand-maroon pt-4 mb-4">
-                          <h4 className="text-base sm:text-lg font-semibold text-brand-gold mb-3">RSVP Status</h4>
-                          <div className="flex flex-wrap gap-2 sm:gap-3">
-                            {[
-                              { value: 'going', label: 'Going', icon: CheckCircle, color: 'text-green-400' },
-                              { value: 'interested', label: 'Interested', icon: HelpCircle, color: 'text-yellow-400' },
-                              { value: 'not_going', label: 'Not Going', icon: XCircle, color: 'text-red-400' },
-                            ].map((option) => {
-                              const Icon = option.icon;
-                              const isSelected = rsvpStatus === option.value;
-                              
-                              return (
-                                <button
-                                  key={option.value}
-                                  onClick={() => handleRSVP(option.value as any)}
-                                  className={`
-                                    flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg border transition-all duration-200 text-sm sm:text-base flex-shrink-0
-                                    ${isSelected 
-                                      ? 'border-brand-gold bg-brand-gold/20 text-brand-gold' 
-                                      : 'border-brand-maroon text-brand-sand hover:border-brand-gold hover:text-brand-gold'
-                                    }
-                                    focus:outline-none focus:ring-2 focus:ring-brand-gold focus:ring-offset-2 focus:ring-offset-brand-charcoal
-                                  `}
-                                >
-                                  <Icon size={16} className={option.color} />
-                                  <span>{option.label}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4 border-t border-brand-maroon">
-                      <button 
-                        onClick={viewEventDetails}
-                        className="px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base"
-                      >
-                        <ExternalLink size={16} />
-                        <span>Add to calendar</span>
-                      </button>
-                      <button 
-                        onClick={addToCalendar}
-                        className="px-4 py-2 bg-gradient-to-tr from-accentFrom to-accentTo text-white rounded-lg hover:shadow-glow transition-all duration-300 flex items-center justify-center sm:justify-start space-x-2 text-sm sm:text-base"
-                      >
-                        <Calendar size={16} />
-                        <span>Download Calendar</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Next Event section removed */}
 
               {/* All Upcoming Events */}
               <div className="mb-6 sm:mb-8 w-full">
                 <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">All Upcoming Events</h2>
-                <SalsaCalEvents maxEvents={10} onEventsLoaded={handleEventsLoaded} />
+                <SalsaCalEvents maxEvents={10} />
               </div>
 
               {/* Event History - Only show for logged-in users */}

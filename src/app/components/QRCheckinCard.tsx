@@ -214,20 +214,7 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
               Start Scanning
             </button>
             
-            <div className="text-xs text-brand-sand opacity-75">
-              {isMobile ? (
-                <>
-                  <p>📱 Mobile detected - Camera will open automatically</p>
-                  <p>🔒 Grant camera permission when prompted</p>
-                  <p>📷 Use back camera for best scanning results</p>
-                </>
-              ) : (
-                <>
-                  <p></p>
-                  <p></p>
-                </>
-              )}
-            </div>
+            
           </div>
         )}
 
