@@ -46,9 +46,11 @@ export default function HomePage() {
             Salsa @ Cal
           </h1>
           <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
-            WELCOMING TEXT THAT SOUNDS CHILL BUT PRO BUT ALSO SALSA FAMILIA
+            Newly constructed website for progress tracking, connecting with the community, and more!!
           </p>
-          
+          <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
+            In progress... not all features are available... yet.
+          </p>
           {!user ? (
             <div className="space-y-6">
               <button
@@ -194,6 +196,82 @@ export default function HomePage() {
         </div> */}
 
 
+
+        {/* Interviews & Appointments Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Interested in Joining?</h2>
+            <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
+              Book an interview appointment using the appropriate link below
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Marketing Interviews */}
+            <a
+              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2osOYyHzZ6FZY05prWdck64l_Wynh7qCRakn6GWX0w1YjvBwggHQMWT_H-FC_QJlTgMh45oZic"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M3 17h18" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Marketing Interviews</h3>
+                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule a marketing interview slot</p>
+                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
+                </div>
+              </div>
+            </a>
+
+            {/* External Interviews */}
+            <a
+              href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ34RXRJFSFpCft-AKwCySxpCDuTH-u_zglj5zxrMdoWv2MBzT1_TSPMm8iPUL0-vXYJQnh5zXXo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3v5h6v-5c0-1.657-1.343-3-3-3z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 21h14M12 3v4" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">External Interviews</h3>
+                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule for non-members or guests</p>
+                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
+                </div>
+              </div>
+            </a>
+
+            {/* Internal Interviews */}
+            <a
+              href="https://calendar.app.google/CF833ddpSbu5BdF1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group"
+            >
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
+                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12H8m8 0a4 4 0 10-8 0 4 4 0 008 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14v7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Internal Interviews</h3>
+                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule for current members</p>
+                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
 
         {/* Community Links Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm">
