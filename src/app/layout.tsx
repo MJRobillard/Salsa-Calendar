@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'google50e607715d87d279',
+    google: 'J8lhr6xJmUejj6IQxBnTudEWrQMxkhhtWPbxy7sFKcc',
   },
   category: 'Education',
   classification: 'Student Organization',
