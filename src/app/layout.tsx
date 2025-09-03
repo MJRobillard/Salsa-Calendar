@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     siteName: 'Salsa @ Cal',
     images: [
       {
-        url: '/dance_classes.png',
+        url: '/logo.png',
         width: 1200,
         height: 630,
         alt: 'Salsa @ Cal Dance Classes at UC Berkeley',
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Salsa @ Cal - UC Berkeley Salsa Dancing Community",
     description: "Join UC Berkeley's premier salsa dancing community! DeCal course, RSO, Open Practica, competitive team, and networking opportunities for all skill levels.",
-    images: ['/dance_classes.png'],
+    images: ['/logo.png'],
     creator: '@salsaatcalberkeley',
   },
   robots: {
