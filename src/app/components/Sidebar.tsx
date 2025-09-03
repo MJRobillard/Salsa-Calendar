@@ -54,7 +54,7 @@ export default function Sidebar({ isOpen = false, onToggle, isCollapsed = false,
     <>
       {/* Sidebar */}
       <aside className={`
-        fixed md:relative md:top-0 inset-y-0 left-0 z-[60]
+        fixed inset-y-0 left-0 z-[60]
         w-72 md:w-64 overflow-y-auto overflow-x-hidden
         transform transition-all duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}

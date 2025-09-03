@@ -86,7 +86,7 @@ export default function DashboardPage() {
         />
         
         {/* Main Content */}
-        <div className={`flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out`}>
+        <div className={`flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64'}`}>
           <TopBar 
             user={user} 
             onSidebarToggle={toggleSidebar}
