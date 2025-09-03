@@ -47,14 +47,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://salsa-at-cal.vercel.app'),
+  metadataBase: new URL('https://salsaatcal.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: "Salsa @ Cal - UC Berkeley's Premier Salsa Dancing Community",
     description: "Join the vibrant salsa community at UC Berkeley! Learn LA style salsa through our DeCal course, join our RSO, participate in Open Practica, and connect with fellow dancers. Free events, competitive team, and networking opportunities.",
-    url: 'https://salsa-at-cal.vercel.app',
+    url: 'https://salsaatcal.com',
     siteName: 'Salsa @ Cal',
     images: [
       {
@@ -125,9 +125,9 @@ export default function RootLayout({
     "name": "Salsa at Cal",
     "alternateName": ["Salsa @ Cal", "Salsa Cal", "Salsa Dance at Cal"],
     "description": "UC Berkeley's premier salsa dancing community offering DeCal courses, RSO activities, Open Practica, and competitive performance teams",
-    "url": "https://salsa-at-cal.vercel.app",
-    "logo": "https://salsa-at-cal.vercel.app/logo.png",
-    "image": "https://salsa-at-cal.vercel.app/dance_classes.png",
+    "url": "https://salsaatcal.com",
+    "logo": "https://salsaatcal.com/logo.png",
+    "image": "https://salsaatcal.com/dance_classes.png",
     "foundingDate": "2009",
     "address": {
       "@type": "PostalAddress",

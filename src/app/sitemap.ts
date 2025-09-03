@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://salsa-at-cal.vercel.app'
+  const baseUrl = 'https://salsaatcal.com'
   
   return [
     {

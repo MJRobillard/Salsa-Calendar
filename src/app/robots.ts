@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/private/', '/admin/'],
     },
-    sitemap: 'https://salsa-at-cal.vercel.app/sitemap.xml',
+    sitemap: 'https://salsaatcal.com/sitemap.xml',
   }
 }
