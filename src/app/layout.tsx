@@ -127,7 +127,7 @@ export default function RootLayout({
     "description": "UC Berkeley's premier salsa dancing community offering DeCal courses, RSO activities, Open Practica, and competitive performance teams",
     "url": "https://salsaatcal.com",
     "logo": "https://salsaatcal.com/logo.png",
-    "image": "https://salsaatcal.com/dance_classes.png",
+    "image": "https://salsaatcal.com/logo.png",
     "foundingDate": "2009",
     "address": {
       "@type": "PostalAddress",
