@@ -11,6 +11,7 @@ interface FirebaseContextType {
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
   markLandingVisited: () => void;
+  redirectToSignIn: () => void;
 }
 
 const FirebaseContext = createContext<FirebaseContextType>({
@@ -20,6 +21,7 @@ const FirebaseContext = createContext<FirebaseContextType>({
   signIn: async () => {},
   signOut: async () => {},
   markLandingVisited: () => {},
+  redirectToSignIn: () => {},
 });
 
 export const useFirebase = () => useContext(FirebaseContext);
@@ -67,6 +69,12 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const redirectToSignIn = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/signin';
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -87,7 +95,8 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       hasVisitedLanding, 
       signIn, 
       signOut: handleSignOut,
-      markLandingVisited 
+      markLandingVisited,
+      redirectToSignIn
     }}>
       {!loading && children}
     </FirebaseContext.Provider>

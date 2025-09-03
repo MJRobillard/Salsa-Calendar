@@ -12,6 +12,7 @@ import JourneyLineChart from '../components/JourneyLineChart';
 import SkillMixDonut from '../components/SkillMixDonut';
 import EventHistory from '../components/EventHistory';
 import AddCalendarCard from '../components/AddCalendarCard';
+import BayAreaNetworkEvents from '../components/BayAreaNetworkEvents';
 
 interface SalsaEvent {
   id: string;
@@ -121,6 +122,11 @@ export default function DashboardPage() {
               {/* Row E - Event History */}
               <div className="mb-4 sm:mb-6 w-full">
                 <EventHistory items={[]} />
+              </div>
+
+              {/* Row F - Bay Area Network Events */}
+              <div className="mb-4 sm:mb-6 w-full">
+                <BayAreaNetworkEvents />
               </div>
             </div>
           </main>

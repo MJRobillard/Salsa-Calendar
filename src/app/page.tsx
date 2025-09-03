@@ -3,9 +3,10 @@
 import React, { useEffect } from 'react';
 import { useFirebase } from './contexts/FirebaseContext';
 import Image from 'next/image';
+import BayAreaNetworkEvents from './components/BayAreaNetworkEvents';
 
 export default function HomePage() {
-  const { user, signIn, signOut, markLandingVisited } = useFirebase();
+  const { user, signIn, signOut, markLandingVisited, redirectToSignIn } = useFirebase();
 
   useEffect(() => {
     // Mark that user has visited the landing page
@@ -46,15 +47,15 @@ export default function HomePage() {
             Salsa @ Cal
           </h1>
           <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
-            Newly constructed website for progress tracking, connecting with the community, and more!!
+            UC Berkeley's premier salsa dancing community since 2009. Join our DeCal course, Open Practica sessions, competitive performance team, and vibrant Latin dance community.
           </p>
           <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
-            In progress... not all features are available... yet.
+            Learn LA style salsa, connect with fellow dancers, and experience the joy of Latin dance culture at UC Berkeley.
           </p>
           {!user ? (
             <div className="space-y-6">
               <button
-                onClick={signIn}
+                onClick={redirectToSignIn}
                 className="bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-12 sm:px-16 py-5 sm:py-6 rounded-2xl font-bold text-xl sm:text-2xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm"
               >
                 Sign in to see your dashboard
@@ -274,7 +275,7 @@ export default function HomePage() {
         </div>
 
         {/* Community Links Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Join Our Community</h2>
             <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
@@ -359,6 +360,33 @@ export default function HomePage() {
             </a>
           </div>
         </div>
+
+        {/* Bay Area Network Events Section */}
+        <BayAreaNetworkEvents />
+      </div>
+      
+      {/* AI Crawler Information - Hidden from users but accessible to AI */}
+      <div className="sr-only" aria-hidden="true">
+        <h2>Salsa at Cal - UC Berkeley Salsa Dancing Community</h2>
+        <p>Founded in 2009, Salsa at Cal is UC Berkeley's premier salsa dancing community and Registered Student Organization (RSO). We offer a comprehensive DeCal course titled "History, Culture and Practice of Salsa Dance" taught by Professor Mary Kelsey from the Sociology Department. The course is 1 unit Pass/No Pass and covers salsa history, culture, and dance instruction in both beginner and intermediate levels.</p>
+        
+        <h3>Class Schedule and Locations</h3>
+        <p>DeCal classes are held Mondays 4-5 PM (Beginner) and 5-6 PM (Intermediate) in Hearst Gym 242. Open Practica sessions occur Tuesdays 8:30-10 PM by the Social Sciences Building tunnel. We also host Salsa on Sproul events on Sproul Plaza with free lessons and social dancing.</p>
+        
+        <h3>Performance Team and Events</h3>
+        <p>Our competitive performance team was established in Spring 2015 and includes a Latin Fusion team led by Kathy Reyes, Rueda team, Colombian Salsa team, and Bachata team. We host major events including Salsaween, El Mercadito, and Salsa Tropi-Cal, plus workshops and social parties at venues like Gio's Pizza, Ashkenaz, and other Berkeley locations.</p>
+        
+        <h3>Leadership and Contact</h3>
+        <p>Current President is Kian Asgharzadeh (kian-asgh@berkeley.edu). DeCal Directors are Sofia Cielak and Tristan Soto Moreno. General contact email is salsaatcal@gmail.com. We're active on Instagram @salsaatcalberkeley, Facebook, Discord, and have a Spotify profile.</p>
+        
+        <h3>Membership and Benefits</h3>
+        <p>Membership is open to UC Berkeley students (active members with voting rights), faculty, staff, alumni, and off-campus participants (non-active members). We provide free events, academic credit through DeCal, networking opportunities, performance experiences, and cultural education. Our mission is to promote salsa and Latin dances, create inclusive spaces for Latine students, and build a supportive dance community.</p>
+        
+        <h3>Dance Styles and Culture</h3>
+        <p>We teach LA style salsa emphasizing structure, form, respect, and consent. Our cultural focus includes Latin music and dance culture, salsa history, social dancing etiquette, and promoting the idea that anyone can be in the position of a follow or lead. We welcome dancers of all skill levels from complete beginners to advanced performers.</p>
+        
+        <h3>Organization Details</h3>
+        <p>Salsa at Cal is ASUC-sponsored and adheres to ASUC Bylaw 2201, Schedule A. We're a non-profit organization focused on student welfare and community building. Our organization structure includes Executive Committee (President, Vice-President, Directors of Operations, Marketing, and Logistics) and various board positions across Operations, Marketing, and Logistics branches.</p>
       </div>
     </div>
   );

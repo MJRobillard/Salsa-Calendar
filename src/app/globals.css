@@ -418,3 +418,226 @@
     @apply space-x-0 sm:space-x-2;
   }
 }
+
+/* FirebaseUI Custom Styling */
+.firebaseui-auth-container {
+  @apply w-full;
+}
+
+.firebaseui-auth-wrapper {
+  @apply w-full;
+}
+
+/* Override FirebaseUI default styles */
+.firebaseui-container {
+  @apply bg-transparent !important;
+  @apply border-none !important;
+  @apply shadow-none !important;
+}
+
+.firebaseui-card-content {
+  @apply bg-transparent !important;
+  @apply border-none !important;
+  @apply p-0 !important;
+}
+
+.firebaseui-title {
+  @apply text-white !important;
+  @apply font-bold !important;
+  @apply text-2xl !important;
+  @apply mb-4 !important;
+}
+
+.firebaseui-subtitle {
+  @apply text-gray-300 !important;
+  @apply text-sm !important;
+  @apply mb-6 !important;
+}
+
+.firebaseui-form-actions {
+  @apply flex !important;
+  @apply flex-col !important;
+  @apply gap-3 !important;
+}
+
+.firebaseui-idp-button {
+  @apply w-full !important;
+  @apply h-12 !important;
+  @apply rounded-lg !important;
+  @apply border !important;
+  @apply border-white/20 !important;
+  @apply bg-white/10 !important;
+  @apply backdrop-blur-sm !important;
+  @apply text-white !important;
+  @apply font-medium !important;
+  @apply transition-all !important;
+  @apply duration-200 !important;
+  @apply hover:bg-white/20 !important;
+  @apply hover:border-white/30 !important;
+  @apply focus:outline-none !important;
+  @apply focus:ring-2 !important;
+  @apply focus:ring-blue-500 !important;
+  @apply focus:ring-offset-2 !important;
+  @apply focus:ring-offset-transparent !important;
+}
+
+.firebaseui-idp-button:hover {
+  @apply transform !important;
+  @apply scale-105 !important;
+}
+
+.firebaseui-idp-button:active {
+  @apply transform !important;
+  @apply scale-95 !important;
+}
+
+.firebaseui-idp-button.firebaseui-idp-google {
+  @apply bg-white !important;
+  @apply text-gray-900 !important;
+  @apply border-gray-300 !important;
+}
+
+.firebaseui-idp-button.firebaseui-idp-google:hover {
+  @apply bg-gray-50 !important;
+  @apply border-gray-400 !important;
+}
+
+.firebaseui-idp-button.firebaseui-idp-email {
+  @apply bg-blue-600 !important;
+  @apply border-blue-600 !important;
+}
+
+.firebaseui-idp-button.firebaseui-idp-email:hover {
+  @apply bg-blue-700 !important;
+  @apply border-blue-700 !important;
+}
+
+.firebaseui-idp-icon {
+  @apply w-5 !important;
+  @apply h-5 !important;
+  @apply mr-3 !important;
+}
+
+.firebaseui-idp-text {
+  @apply text-sm !important;
+  @apply font-medium !important;
+}
+
+.firebaseui-tospp-full-message {
+  @apply text-xs !important;
+  @apply text-gray-400 !important;
+  @apply mt-4 !important;
+  @apply text-center !important;
+}
+
+.firebaseui-tospp-full-message a {
+  @apply text-blue-400 !important;
+  @apply hover:text-blue-300 !important;
+  @apply underline !important;
+}
+
+.firebaseui-error-message {
+  @apply bg-red-500/20 !important;
+  @apply border !important;
+  @apply border-red-500/30 !important;
+  @apply text-red-200 !important;
+  @apply rounded-lg !important;
+  @apply p-3 !important;
+  @apply mb-4 !important;
+  @apply text-sm !important;
+}
+
+.firebaseui-info-message {
+  @apply bg-blue-500/20 !important;
+  @apply border !important;
+  @apply border-blue-500/30 !important;
+  @apply text-blue-200 !important;
+  @apply rounded-lg !important;
+  @apply p-3 !important;
+  @apply mb-4 !important;
+  @apply text-sm !important;
+}
+
+/* Email form styling */
+.firebaseui-input {
+  @apply w-full !important;
+  @apply h-12 !important;
+  @apply px-4 !important;
+  @apply py-3 !important;
+  @apply rounded-lg !important;
+  @apply border !important;
+  @apply border-white/20 !important;
+  @apply bg-white/10 !important;
+  @apply backdrop-blur-sm !important;
+  @apply text-white !important;
+  @apply placeholder-gray-400 !important;
+  @apply focus:outline-none !important;
+  @apply focus:ring-2 !important;
+  @apply focus:ring-blue-500 !important;
+  @apply focus:border-blue-500 !important;
+  @apply mb-4 !important;
+}
+
+.firebaseui-input:focus {
+  @apply bg-white/20 !important;
+  @apply border-white/30 !important;
+}
+
+.firebaseui-label {
+  @apply text-white !important;
+  @apply text-sm !important;
+  @apply font-medium !important;
+  @apply mb-2 !important;
+  @apply block !important;
+}
+
+.firebaseui-button {
+  @apply w-full !important;
+  @apply h-12 !important;
+  @apply rounded-lg !important;
+  @apply bg-blue-600 !important;
+  @apply text-white !important;
+  @apply font-medium !important;
+  @apply transition-all !important;
+  @apply duration-200 !important;
+  @apply hover:bg-blue-700 !important;
+  @apply focus:outline-none !important;
+  @apply focus:ring-2 !important;
+  @apply focus:ring-blue-500 !important;
+  @apply focus:ring-offset-2 !important;
+  @apply focus:ring-offset-transparent !important;
+}
+
+.firebaseui-button:hover {
+  @apply transform !important;
+  @apply scale-105 !important;
+}
+
+.firebaseui-button:active {
+  @apply transform !important;
+  @apply scale-95 !important;
+}
+
+/* Loading spinner */
+.firebaseui-spinner {
+  @apply border-white/20 !important;
+  @apply border-t-white !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .firebaseui-idp-button {
+    @apply h-14 !important;
+    @apply text-base !important;
+  }
+  
+  .firebaseui-input {
+    @apply h-14 !important;
+    @apply text-base !important;
+  }
+  
+  .firebaseui-button {
+    @apply h-14 !important;
+    @apply text-base !important;
+  }
+}
