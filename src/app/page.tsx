@@ -277,7 +277,7 @@ export default function HomePage() {
         {/* Community Links Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Join Our Community</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Stay In Touch</h2>
             <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
               Stay connected with Salsa @ Cal and never miss an update
             </p>
