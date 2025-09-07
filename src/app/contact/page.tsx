@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import BottomNavigation from '../components/BottomNavigation';
@@ -24,14 +25,6 @@ export default function ContactPage() {
   const router = useRouter();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -54,40 +47,6 @@ export default function ContactPage() {
     }
   }, [user, loading, hasVisitedLanding, router]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-
-    try {
-      // Simulate form submission - replace with actual EmailJS implementation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
-      
-      setSubmitStatus('success');
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-brand-paper flex items-center justify-center">
@@ -100,9 +59,18 @@ export default function ContactPage() {
   // Allow guests to access the contact page
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal text-white overflow-x-hidden relative">
-      {/* Subtle overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden">
+      {/* Background with blurred salsa dance photo */}
+      <div className="absolute inset-0">
+        <Image 
+          src="/dance_classes.png" 
+          alt="Salsa dancing background" 
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
+      </div>
       
       <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar - Only show for authenticated users */}
@@ -162,113 +130,7 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
-                {/* Contact Form */}
-                <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-brand-gold mb-6">Send us a Message</h2>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="name" className="block text-brand-gold font-semibold mb-2">
-                          Name *
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
-                          placeholder="Your full name"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="email" className="block text-brand-gold font-semibold mb-2">
-                          Email *
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
-                          placeholder="your.email@berkeley.edu"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="subject" className="block text-brand-gold font-semibold mb-2">
-                        Subject *
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
-                        placeholder="What's this about?"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="message" className="block text-brand-gold font-semibold mb-2">
-                        Message *
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        required
-                        rows={6}
-                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300 resize-none"
-                        placeholder="Tell us more about your question or concern..."
-                      />
-                    </div>
-                    
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-gradient-to-r from-brand-gold to-accentTo hover:from-accentTo hover:to-brand-gold text-brand-charcoal rounded-lg font-bold text-lg shadow-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-brand-charcoal border-t-transparent rounded-full animate-spin"></div>
-                          <span>Sending...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send size={20} />
-                          <span>Send Message</span>
-                        </>
-                      )}
-                    </button>
-                    
-                    {/* Status Messages */}
-                    {submitStatus === 'success' && (
-                      <div className="flex items-center space-x-2 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
-                        <CheckCircle size={20} className="text-green-400" />
-                        <span className="text-green-400">Message sent successfully! We'll get back to you soon.</span>
-                      </div>
-                    )}
-                    
-                    {submitStatus === 'error' && (
-                      <div className="flex items-center space-x-2 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-                        <AlertCircle size={20} className="text-red-400" />
-                        <span className="text-red-400">Failed to send message. Please try again or contact us directly.</span>
-                      </div>
-                    )}
-                  </form>
-                </div>
-
+              <div className="max-w-4xl mx-auto">
                 {/* Contact Information */}
                 <div className="space-y-8">
                   {/* General Contact */}

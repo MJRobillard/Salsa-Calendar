@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import SalsaCalEvents from '../components/SalsaCalEvents';
@@ -25,6 +26,8 @@ export default function EventsPage() {
   const [rsvpStatus, setRsvpStatus] = useState<'going' | 'interested' | 'not_going'>('going');
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [eventHistory, setEventHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -36,6 +39,37 @@ export default function EventsPage() {
       setIsSidebarCollapsed(!isSidebarCollapsed);
     }
   };
+
+  // Fetch event history from MongoDB
+  useEffect(() => {
+    const fetchEventHistory = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingHistory(true);
+        const response = await fetch('/api/events/history', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${await user.getIdToken()}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setEventHistory(data.eventHistory || []);
+        } else {
+          console.error('Failed to fetch event history');
+        }
+      } catch (error) {
+        console.error('Error fetching event history:', error);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+
+    fetchEventHistory();
+  }, [user]);
 
   // Removed next event selection from events list per request
 
@@ -82,9 +116,18 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
-      {/* Subtle overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden">
+      {/* Background with blurred salsa dance photo */}
+      <div className="absolute inset-0">
+        <Image 
+          src="/dance_classes.png" 
+          alt="Salsa dancing background" 
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
+      </div>
       
       <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar - Only show for logged-in users */}
@@ -176,11 +219,7 @@ export default function EventsPage() {
                 <div className="mb-6 sm:mb-8 w-full">
                   <h2 className="text-xl sm:text-2xl font-semibold text-brand-gold mb-4">Event History</h2>
                   <EventHistory 
-                    items={[
-                      { date: '2024-01-22', type: 'lesson', role: 'lead', location: 'Hearst Gym' },
-                      { date: '2024-01-15', type: 'social', role: 'follow', location: 'Greek Theatre' },
-                      { date: '2024-01-08', type: 'lesson', role: 'lead', location: 'Hearst Gym' }
-                    ]}
+                    items={eventHistory}
                   />
                 </div>
               )}

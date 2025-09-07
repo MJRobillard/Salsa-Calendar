@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Image from 'next/image';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import QRScanner from '../components/QRScanner';
@@ -35,25 +36,73 @@ export default function ProfilePage() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [lastScanTime, setLastScanTime] = useState<string | null>(null);
 
-  // Mock profile data - in a real app, this would come from your backend
+  // Profile data from MongoDB
   const [profileData, setProfileData] = useState({
-    displayName: user?.displayName || 'John Doe',
-    email: user?.email || 'john.doe@berkeley.edu',
-    phone: '+1 (555) 123-4567',
-    location: 'Berkeley, CA',
-    bio: 'Passionate salsa dancer and UC Berkeley student. Love connecting with the dance community!',
-    joinDate: 'September 2023',
-    lastSignIn: 'Today',
-    emailVerified: true
+    displayName: user?.displayName || '',
+    email: user?.email || '',
+    phone: '',
+    location: '',
+    bio: '',
+    joinDate: '',
+    lastSignIn: '',
+    emailVerified: user?.emailVerified || false,
+    eventsAttended: 0,
+    danceHours: 0,
+    badgesEarned: 0
   });
 
   const [editData, setEditData] = useState(profileData);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/');
     }
   }, [user, loading, router]);
+
+  // Fetch profile data from MongoDB
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingProfile(true);
+        const response = await fetch('/api/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${await user.getIdToken()}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setProfileData(prev => ({
+            ...prev,
+            ...data,
+            displayName: data.displayName || user.displayName || '',
+            email: data.email || user.email || '',
+            emailVerified: data.emailVerified || user.emailVerified || false
+          }));
+          setEditData(prev => ({
+            ...prev,
+            ...data,
+            displayName: data.displayName || user.displayName || '',
+            email: data.email || user.email || '',
+            emailVerified: data.emailVerified || user.emailVerified || false
+          }));
+        } else {
+          console.error('Failed to fetch profile data');
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+
+    fetchProfileData();
+  }, [user]);
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -71,9 +120,26 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    setProfileData(editData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${await user?.getIdToken()}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editData),
+      });
+      
+      if (response.ok) {
+        setProfileData(editData);
+        setIsEditing(false);
+      } else {
+        console.error('Failed to save profile data');
+      }
+    } catch (error) {
+      console.error('Error saving profile data:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -100,9 +166,18 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal text-white overflow-x-hidden relative">
-      {/* Subtle overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden">
+      {/* Background with blurred salsa dance photo */}
+      <div className="absolute inset-0">
+        <Image 
+          src="/dance_classes.png" 
+          alt="Salsa dancing background" 
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
+      </div>
       
       <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar */}
@@ -272,20 +347,26 @@ export default function ProfilePage() {
                     {/* Account Statistics */}
                     <div className="mt-8 pt-6 border-t border-brand-maroon/20">
                       <h3 className="text-xl font-bold text-brand-gold mb-4">Account Statistics</h3>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-brand-gold">8</div>
-                          <div className="text-brand-sand text-sm">Events Attended</div>
+                      {loadingProfile ? (
+                        <div className="text-center py-4">
+                          <div className="text-brand-sand">Loading statistics...</div>
                         </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-brand-gold">480</div>
-                          <div className="text-brand-sand text-sm">Dance Hours</div>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-brand-gold">{profileData.eventsAttended || 0}</div>
+                            <div className="text-brand-sand text-sm">Events Attended</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-brand-gold">{profileData.danceHours || 0}</div>
+                            <div className="text-brand-sand text-sm">Dance Hours</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-brand-gold">{profileData.badgesEarned || 0}</div>
+                            <div className="text-brand-sand text-sm">Badges Earned</div>
+                          </div>
                         </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-brand-gold">3</div>
-                          <div className="text-brand-sand text-sm">Badges Earned</div>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 </div>

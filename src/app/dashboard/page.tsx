@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
+import BottomNavigation from '../components/BottomNavigation';
 import QRCheckinCard from '../components/QRCheckinCard';
 import ProgressSummary from '../components/ProgressSummary';
 import LatestPhotos from '../components/LatestPhotos';
@@ -30,6 +32,14 @@ export default function DashboardPage() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
+  // State for data from MongoDB
+  const [progressData, setProgressData] = useState({});
+  const [thumbnails, setThumbnails] = useState<string[]>([]);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [styleData, setStyleData] = useState([]);
+  const [eventHistory, setEventHistory] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
+
   // Unified sidebar toggle function
   const toggleSidebar = () => {
     if (window.innerWidth < 768) {
@@ -46,18 +56,45 @@ export default function DashboardPage() {
       if (!user) {
         router.push('/');
       } else if (!hasVisitedLanding) {
-        // If user is signed in but hasn't visited landing page, redirect them
         router.push('/');
       }
     }
   }, [user, loading, hasVisitedLanding, router]);
 
-  // Removed NextEvent fetching/rendering per request
+  // Fetch data from MongoDB
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingData(true);
+        const response = await fetch('/api/dashboard', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${await user.getIdToken()}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setProgressData(data.progressData || {});
+          setThumbnails(data.thumbnails || []);
+          setAttendanceData(data.attendanceData || []);
+          setStyleData(data.styleData || []);
+          setEventHistory(data.eventHistory || []);
+        } else {
+          console.error('Failed to fetch dashboard data');
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoadingData(false);
+      }
+    };
 
-  const handleRSVP = (status: 'going' | 'interested' | 'not_going') => {
-    setRsvpStatus(status);
-    console.log('RSVP status updated:', status);
-  };
+    fetchDashboardData();
+  }, [user]);
 
   if (loading) {
     return (
@@ -68,13 +105,22 @@ export default function DashboardPage() {
   }
 
   if (!user || !hasVisitedLanding) {
-    return null; // Will redirect
+    return null;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
-      {/* Subtle overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden">
+      {/* Background with blurred salsa dance photo */}
+      <div className="absolute inset-0">
+        <Image 
+          src="/dance_classes.png" 
+          alt="Salsa dancing background" 
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
+      </div>
       
       <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar */}
@@ -95,43 +141,69 @@ export default function DashboardPage() {
           />
           
           {/* Dashboard Content */}
-          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto w-full">
-              {/* Row A removed: Next Event card no longer shown */}
-
-              {/* Row B - Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 w-full">
-                <QRCheckinCard mode="scan" userId={user.uid} />
-                <ProgressSummary 
-                  styles={['salsa', 'bachata', 'cumbia']}
-                  data={{}}
-                />
-                <LatestPhotos 
-                  thumbnails={[]}
-                  onOpenGallery={() => console.log('Open gallery')}
-                />
-                <AddCalendarCard />
+              {/* Page Header */}
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-3xl sm:text-4xl font-bold text-brand-gold mb-2">Dashboard</h1>
+                <p className="text-brand-sand text-lg">Welcome back, {user.displayName || 'Dancer'}!</p>
               </div>
 
-              {/* Row C - Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 w-full">
-                <JourneyLineChart data={[]} />
-                <SkillMixDonut data={[]} />
+              {/* Dashboard Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                {/* Left Column */}
+                <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+                  {/* QR Check-in Card */}
+                  <QRCheckinCard 
+                    mode="show" 
+                    userId={user.uid} 
+                  />
+                  
+                  {/* Progress Summary */}
+                  <ProgressSummary 
+                    styles={['LA Style', 'Bachata', 'Salsa']}
+                    data={progressData}
+                  />
+                  
+                  {/* Latest Photos */}
+                  <LatestPhotos 
+                    thumbnails={thumbnails}
+                  />
+                  
+                  {/* Add Calendar Card */}
+                  <AddCalendarCard />
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6 sm:space-y-8">
+                  {/* Journey Line Chart */}
+                  <JourneyLineChart 
+                    data={attendanceData}
+                  />
+                  
+                  {/* Skill Mix Donut */}
+                  <SkillMixDonut 
+                    data={styleData}
+                  />
+                  
+                  {/* Event History */}
+                  <EventHistory 
+                    items={eventHistory}
+                  />
+                </div>
               </div>
 
-              {/* Row E - Event History */}
-              <div className="mb-4 sm:mb-6 w-full">
-                <EventHistory items={[]} />
-              </div>
-
-              {/* Row F - Bay Area Network Events */}
-              <div className="mb-4 sm:mb-6 w-full">
+              {/* Bay Area Network Events */}
+              <div className="mt-8 sm:mt-12">
                 <BayAreaNetworkEvents />
               </div>
             </div>
           </main>
         </div>
       </div>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

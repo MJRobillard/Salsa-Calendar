@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import BottomNavigation from '../components/BottomNavigation';
@@ -22,6 +23,14 @@ export default function NetworkPage() {
   const router = useRouter();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [networkData, setNetworkData] = useState({
+    connections: [],
+    interests: [],
+    skills: [],
+    events: [],
+    messages: []
+  });
+  const [loadingNetwork, setLoadingNetwork] = useState(true);
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -44,6 +53,37 @@ export default function NetworkPage() {
     }
   }, [user, loading, hasVisitedLanding, router]);
 
+  // Fetch network data from MongoDB
+  useEffect(() => {
+    const fetchNetworkData = async () => {
+      if (!user) return;
+      
+      try {
+        setLoadingNetwork(true);
+        const response = await fetch('/api/network', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${await user.getIdToken()}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setNetworkData(data);
+        } else {
+          console.error('Failed to fetch network data');
+        }
+      } catch (error) {
+        console.error('Error fetching network data:', error);
+      } finally {
+        setLoadingNetwork(false);
+      }
+    };
+
+    fetchNetworkData();
+  }, [user]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-brand-paper flex items-center justify-center">
@@ -57,9 +97,18 @@ export default function NetworkPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
-      {/* Subtle overlay gradient for depth */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
+    <div className="min-h-screen relative bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden">
+      {/* Background with blurred salsa dance photo */}
+      <div className="absolute inset-0">
+        <Image 
+          src="/dance_classes.png" 
+          alt="Salsa dancing background" 
+          fill
+          className="object-cover opacity-20"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
+      </div>
       
       <div className="flex w-full overflow-hidden relative z-10">
         {/* Sidebar */}
