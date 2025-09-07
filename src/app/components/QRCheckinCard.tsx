@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Camera, QrCode, Scan, X, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import QRCode from 'qrcode.react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
+import ProgressiveAuth from './ProgressiveAuth';
 
 interface QRCheckinCardProps {
   mode: 'scan' | 'show';
@@ -192,7 +193,11 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold">
+    <ProgressiveAuth
+      feature="QR Check-in"
+      description="Scan QR codes at events to check in and track your attendance"
+      className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold"
+    >
       <div className="text-center">
         <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
           <Camera size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
@@ -289,6 +294,6 @@ export default function QRCheckinCard({ mode, userId }: QRCheckinCardProps) {
           </div>
         )}
       </div>
-    </div>
+    </ProgressiveAuth>
   );
 }

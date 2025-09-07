@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useFirebase } from './contexts/FirebaseContext';
 import Image from 'next/image';
 import BayAreaNetworkEvents from './components/BayAreaNetworkEvents';
+import BottomNavigation from './components/BottomNavigation';
 
 export default function HomePage() {
   const { user, signIn, signOut, markLandingVisited, redirectToSignIn } = useFirebase();
@@ -19,375 +20,195 @@ export default function HomePage() {
       <div className="absolute inset-0">
         <Image 
           src="/dance_classes.png" 
-          alt="Salsa Dance Background" 
+          alt="Salsa dancing background" 
           fill
-          className="object-cover opacity-10 blur-sm"
+          className="object-cover opacity-20"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/70 to-[#000000]/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#000000]/80 via-[#0b1939]/60 to-[#000000]/80"></div>
       </div>
-      
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        {/* Hero Section */}
-        <div className="text-center mb-20 sm:mb-24 lg:mb-32">
-          {/* Logo */}
-          <div className="flex justify-center mb-8 sm:mb-10">
-            <div className="relative w-28 h-28 sm:w-36 sm:h-36 lg:w-44 lg:h-44">
-              <Image 
-                src="/logo.png" 
-                alt="Salsa Club Logo" 
-                fill
-                className="drop-shadow-2xl"
-                priority
-              />
-            </div>
-          </div>
-          
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#FFD54F] mb-6 sm:mb-8 drop-shadow-2xl">
-            Salsa @ Cal
-          </h1>
-          <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
-            UC Berkeley's premier salsa dancing community since 2009. Join our DeCal course, Open Practica sessions, competitive performance team, and vibrant Latin dance community.
-          </p>
-          <p className="text-xl sm:text-2xl lg:text-3xl text-white/95 mb-12 sm:mb-16 max-w-5xl mx-auto leading-relaxed font-light">
-            Learn LA style salsa, connect with fellow dancers, and experience the joy of Latin dance culture at UC Berkeley.
-          </p>
-          {!user ? (
-            <div className="space-y-6">
-              <button
-                onClick={redirectToSignIn}
-                className="bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-12 sm:px-16 py-5 sm:py-6 rounded-2xl font-bold text-xl sm:text-2xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm"
-              >
-                Sign in to see your dashboard
-              </button>
+
+      {/* Content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="px-4 sm:px-6 py-4 sm:py-6">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#FFD54F] to-[#FFB300] rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-[#0b1939] font-bold text-lg sm:text-xl">S</span>
+              </div>
               <div>
-                <a
-                  href="/events"
-                  className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform"
-                >
-                  <span>View Events</span>
-                  <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Salsa @ Cal</h1>
+                <p className="text-xs sm:text-sm text-[#FFD54F]">UC Berkeley</p>
               </div>
             </div>
-          ) : (
-            <div className="space-y-6 sm:space-y-8">
-              <p className="text-white/95 text-lg sm:text-xl">Welcome back, {user.displayName}!</p>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center">
+            
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {user ? (
+                <div className="flex items-center space-x-3">
+                  <div className="hidden sm:block text-right">
+                    <p className="text-sm text-white font-medium">{user.displayName || 'User'}</p>
+                    <p className="text-xs text-[#FFD54F]">{user.email}</p>
+                  </div>
+                  <button
+                    onClick={signOut}
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#FFD54F]/20 to-[#FFB300]/20 hover:from-[#FFB300]/30 hover:to-[#FFD54F]/30 text-[#FFD54F] rounded-lg font-semibold text-sm sm:text-base transition-all duration-300 border border-[#FFD54F]/40"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
                 <button
-                  onClick={signOut}
-                  className="bg-gradient-to-br from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-br hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold"
+                  onClick={signIn}
+                  className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] rounded-lg font-semibold text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-[#FFD54F]/40"
                 >
-                  Sign Out
+                  Sign In
                 </button>
-                <a
-                  href="/dashboard"
-                  className="bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 text-lg sm:text-xl shadow-2xl border-2 border-[#FFD54F]/50 backdrop-blur-sm"
-                >
-                  Go to Dashboard
-                </a>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 px-4 sm:px-6 pb-20 md:pb-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Hero Section */}
+            <div className="text-center mb-12 sm:mb-16">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+                Welcome to Salsa @ Cal
+              </h1>
+              <p className="text-lg sm:text-xl text-[#FFD54F] mb-8 max-w-3xl mx-auto leading-relaxed">
+                Join Berkeley's premier salsa community. Learn, dance, and connect with passionate dancers from across the Bay Area.
+              </p>
+              
+              {!user ? (
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/events" className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm">
+                      <span>Browse Events</span>
+                      <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                    <a href="/dashboard" className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform">
+                      <span>Explore Dashboard</span>
+                      <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white/80 text-sm sm:text-base mb-3">Want to track your progress and RSVP for events?</p>
+                    <button onClick={redirectToSignIn} className="bg-gradient-to-r from-[#FFD54F]/20 to-[#FFB300]/20 hover:from-[#FFB300]/30 hover:to-[#FFD54F]/30 text-[#FFD54F] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg shadow-lg hover:shadow-[#FFD54F]/20 transition-all duration-300 transform hover:scale-105 border border-[#FFD54F]/40 backdrop-blur-sm">
+                      Sign In with Google
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/dashboard" className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105 border-2 border-[#FFD54F]/50 backdrop-blur-sm">
+                      <span>Go to Dashboard</span>
+                      <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                    <a href="/events" className="inline-flex items-center space-x-3 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] px-8 sm:px-10 py-4 sm:py-5 rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform">
+                      <span>View Events</span>
+                      <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Features Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[#FFD54F]/20 shadow-xl">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#FFD54F] to-[#FFB300] rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-[#0b1939]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Weekly Classes</h3>
+                <p className="text-[#FFD54F] text-sm sm:text-base leading-relaxed">
+                  Join our beginner-friendly classes every week. Learn from experienced instructors and build your salsa foundation.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[#FFD54F]/20 shadow-xl">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#FFD54F] to-[#FFB300] rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-[#0b1939]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Community Events</h3>
+                <p className="text-[#FFD54F] text-sm sm:text-base leading-relaxed">
+                  Connect with dancers across the Bay Area. Attend socials, workshops, and special events throughout the semester.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-[#FFD54F]/20 shadow-xl">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-[#FFD54F] to-[#FFB300] rounded-xl flex items-center justify-center mb-4 sm:mb-6">
+                  <svg className="w-6 h-6 sm:w-8 sm:h-8 text-[#0b1939]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Track Progress</h3>
+                <p className="text-[#FFD54F] text-sm sm:text-base leading-relaxed">
+                  Monitor your dance journey with our progress tracking system. See your improvement over time and celebrate milestones.
+                </p>
               </div>
             </div>
-        )}
+
+            {/* Bay Area Network Events */}
+            <div className="mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 sm:mb-8 text-center">
+                Bay Area Network Events
+              </h2>
+              <BayAreaNetworkEvents />
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/80 backdrop-blur-sm p-8 sm:p-12 rounded-2xl border border-[#FFD54F]/20 shadow-xl">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">
+                Ready to Start Your Salsa Journey?
+              </h2>
+              <p className="text-[#FFD54F] text-lg sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto">
+                Join hundreds of students who have discovered the joy of salsa dancing at Berkeley.
+              </p>
+              {!user ? (
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={redirectToSignIn}
+                    className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] rounded-2xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105"
+                  >
+                    Get Started Today
+                  </button>
+                  <a
+                    href="/events"
+                    className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform"
+                  >
+                    Browse Events
+                  </a>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a
+                    href="/dashboard"
+                    className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-[#FFD54F] to-[#FFB300] hover:from-[#FFB300] hover:to-[#FFD54F] text-[#0b1939] rounded-2xl font-bold text-lg sm:text-xl shadow-2xl hover:shadow-[#FFD54F]/40 transition-all duration-300 transform hover:scale-105"
+                  >
+                    Go to Dashboard
+                  </a>
+                  <a
+                    href="/events"
+                    className="px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-[#0b1939]/90 to-[#000000]/90 backdrop-blur-sm text-[#FFD54F] rounded-2xl border-2 border-[#FFD54F]/60 hover:border-[#FFD54F]/80 hover:bg-gradient-to-r hover:from-[#0b1939] hover:to-[#000000] transition-all duration-300 shadow-lg text-lg sm:text-xl font-semibold hover:scale-105 transform"
+                  >
+                    View Events
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </main>
       </div>
 
-        {/* About Preview Cards with Images - Three Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-20 sm:mb-24 lg:mb-32">
-          {/* RSO Section */}
-          <a href="/about" className="group">
-            <div className="overflow-hidden">
-              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
-                <div className="relative">
-                  {/* RSO Group Photo - Top Half */}
-                  <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
-                    <Image 
-                      src="/dance_classes.png" 
-                      alt="Salsa @ Cal RSO Group" 
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  </div>
-                  {/* Text Content - Lower Half */}
-                  <div className="text-center">
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#FFD54F] mb-4 drop-shadow-lg">RSO</h3>
-                    <p className="text-white/95 text-base sm:text-lg leading-relaxed">Official student organization for salsa enthusiasts</p>
-                    <p className="text-white/80 text-sm mt-2">ASUC-sponsored since 2009</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          
-          {/* DeCal Section */}
-          <a href="/about" className="group">
-            <div className="overflow-hidden">
-              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
-                <div className="relative">
-                  {/* DeCal Dance Instruction Photo - Top Half */}
-                  <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
-                    <Image 
-                      src="/image.png" 
-                      alt="Salsa Dance Instruction" 
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  </div>
-                  {/* Text Content - Lower Half */}
-                  <div className="text-center">
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#FFD54F] mb-4 drop-shadow-lg">DeCal</h3>
-                    <p className="text-white/95 text-base sm:text-lg leading-relaxed">Academic course for salsa dance instruction</p>
-                    <p className="text-white/80 text-sm mt-2">1 unit P/NP • Hearst Gym 242</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-          
-          {/* Competitive Team Section */}
-          <a href="/about" className="group">
-            <div className="overflow-hidden md:col-span-2 lg:col-span-1">
-              <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-6 sm:p-8 rounded-xl shadow-2xl backdrop-blur-sm hover:scale-105 transition-all duration-300 border border-brand-gold">
-                <div className="relative">
-                  {/* Competitive Team Performance Photo - Top Half */}
-                  <div className="relative w-full h-48 sm:h-56 mb-6 rounded-xl overflow-hidden">
-                    <Image 
-                      src="/Team.png" 
-                      alt="Competitive Salsa Team Performance" 
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  </div>
-                  {/* Text Content - Lower Half */}
-                  <div className="text-center">
-                    <h3 className="text-2xl sm:text-3xl font-bold text-[#FFD54F] mb-4 drop-shadow-lg">Competitive Team</h3>
-                    <p className="text-white/95 text-base sm:text-lg leading-relaxed">Performance and competition opportunities</p>
-                    <p className="text-white/80 text-sm mt-2">Established Spring 2015 • Auditions required</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        {/* Instagram Reel Section - Commented Out */}
-        {/* <div className="relative overflow-hidden bg-[#2D0F0F]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FF6F3C]/40 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
-          <div className="relative">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-8 sm:mb-10 text-center drop-shadow-lg">Experience the Energy</h2>
-            <div className="relative w-full flex justify-center">
-              <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl">
-                <iframe
-                  src="https://www.instagram.com/reel/DEi6ajCSNQl/embed"
-                  className="w-full h-96 lg:h-[32rem] xl:h-[36rem] 2xl:h-[40rem] rounded-2xl"
-                  frameBorder="0"
-                  scrolling="no"
-                  allowTransparency={true}
-                  title="Salsa @ Cal Instagram Reel"
-                />
-              </div>
-            </div>
-            <p className="text-white/90 text-center mt-8 sm:mt-10 text-lg sm:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed">
-              Recent Postings
-            </p>
-          </div>
-        </div> */}
-
-
-
-        {/* Interviews & Appointments Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Interested in Joining?</h2>
-            <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
-              Book an interview appointment using the appropriate link below
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Marketing Interviews */}
-            <a
-              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2osOYyHzZ6FZY05prWdck64l_Wynh7qCRakn6GWX0w1YjvBwggHQMWT_H-FC_QJlTgMh45oZic"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M3 12h18M3 17h18" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Marketing Interviews</h3>
-                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule a marketing interview slot</p>
-                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
-                </div>
-              </div>
-            </a>
-
-            {/* External Interviews */}
-            <a
-              href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ34RXRJFSFpCft-AKwCySxpCDuTH-u_zglj5zxrMdoWv2MBzT1_TSPMm8iPUL0-vXYJQnh5zXXo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 1.343-3 3v5h6v-5c0-1.657-1.343-3-3-3z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 21h14M12 3v4" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">External Interviews</h3>
-                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule for non-members or guests</p>
-                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
-                </div>
-              </div>
-            </a>
-
-            {/* Internal Interviews */}
-            <a
-              href="https://calendar.app.google/CF833ddpSbu5BdF1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12H8m8 0a4 4 0 10-8 0 4 4 0 008 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14v7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Internal Interviews</h3>
-                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">Schedule for current members</p>
-                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">Book Now →</div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Community Links Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0b1939]/95 to-[#000000]/95 p-8 sm:p-10 lg:p-12 rounded-2xl shadow-2xl border-2 border-[#FFD54F]/60 backdrop-blur-sm mb-20 sm:mb-24 lg:mb-32">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FFD54F] mb-6 drop-shadow-lg">Stay In Touch</h2>
-            <p className="text-white/95 text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-4xl mx-auto">
-              Stay connected with Salsa @ Cal and never miss an update
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Email Signup */}
-            <a 
-              href="https://forms.gle/bkFe31xxN9opn9SC6" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#0b1939]/80 to-[#000000]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FFD54F]/40 hover:border-[#FFD54F]/70 transition-all duration-300 hover:shadow-[#FFD54F]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FFD54F]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FFD54F]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FFD54F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Email Signup</h3>
-                  <p className="text-white/90 text-sm sm:text-base leading-relaxed mb-4">
-                    Get announcements about club events, DeCal classes, and socials
-                  </p>
-                  <div className="text-[#FFD54F] text-sm font-medium group-hover:text-[#FFB300] transition-colors">
-                    Sign Up →
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            {/* Discord */}
-            <a 
-              href="https://discord.gg/XVFXVC3rf8" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#2D0F0F]/80 to-[#2D0F0F]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FF6F3C]/40 hover:border-[#FF6F3C]/70 transition-all duration-300 hover:shadow-[#FF6F3C]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FF6F3C]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FF6F3C]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FF6F3C]" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5499-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">Join Our Discord</h3>
-                  <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-4">
-                    Connect with fellow dancers, share music, and stay updated
-                  </p>
-                  <div className="text-[#FF6F3C] text-sm font-medium group-hover:text-[#FFD54F] transition-colors">
-                    Join Server →
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            {/* Linktree */}
-            <a 
-              href="https://linktr.ee/salsa_at_cal" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="group"
-            >
-              <div className="bg-gradient-to-br from-[#2D0F0F]/80 to-[#2D0F0F]/60 p-6 sm:p-8 rounded-2xl border-2 border-[#FF6F3C]/40 hover:border-[#FF6F3C]/70 transition-all duration-300 hover:shadow-[#FF6F3C]/30 group-hover:scale-105">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#FF6F3C]/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#FF6F3C]/30 transition-colors">
-                    <svg className="w-8 h-8 text-[#FF6F3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#FFD54F] mb-3">All Our Links</h3>
-                  <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-4">
-                    Find everything you need in one place - social media, events, and more
-                  </p>
-                  <div className="text-[#FF6F3C] text-sm font-medium group-hover:text-[#FFD54F] transition-colors">
-                    Visit Linktree →
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        {/* Bay Area Network Events Section */}
-        <BayAreaNetworkEvents />
-      </div>
-      
-      {/* AI Crawler Information - Hidden from users but accessible to AI */}
-      <div className="sr-only" aria-hidden="true">
-        <h2>Salsa at Cal - UC Berkeley Salsa Dancing Community</h2>
-        <p>Founded in 2009, Salsa at Cal is UC Berkeley's premier salsa dancing community and Registered Student Organization (RSO). We offer a comprehensive DeCal course titled "History, Culture and Practice of Salsa Dance" taught by Professor Mary Kelsey from the Sociology Department. The course is 1 unit Pass/No Pass and covers salsa history, culture, and dance instruction in both beginner and intermediate levels.</p>
-        
-        <h3>Class Schedule and Locations</h3>
-        <p>DeCal classes are held Mondays 4-5 PM (Beginner) and 5-6 PM (Intermediate) in Hearst Gym 242. Open Practica sessions occur Tuesdays 8:30-10 PM by the Social Sciences Building tunnel. We also host Salsa on Sproul events on Sproul Plaza with free lessons and social dancing.</p>
-        
-        <h3>Performance Team and Events</h3>
-        <p>Our competitive performance team was established in Spring 2015 and includes a Latin Fusion team led by Kathy Reyes, Rueda team, Colombian Salsa team, and Bachata team. We host major events including Salsaween, El Mercadito, and Salsa Tropi-Cal, plus workshops and social parties at venues like Gio's Pizza, Ashkenaz, and other Berkeley locations.</p>
-        
-        <h3>Leadership and Contact</h3>
-        <p>Current President is Kian Asgharzadeh (kian-asgh@berkeley.edu). DeCal Directors are Sofia Cielak and Tristan Soto Moreno. General contact email is salsaatcal@gmail.com. We're active on Instagram @salsaatcalberkeley, Facebook, Discord, and have a Spotify profile.</p>
-        
-        <h3>Membership and Benefits</h3>
-        <p>Membership is open to UC Berkeley students (active members with voting rights), faculty, staff, alumni, and off-campus participants (non-active members). We provide free events, academic credit through DeCal, networking opportunities, performance experiences, and cultural education. Our mission is to promote salsa and Latin dances, create inclusive spaces for Latine students, and build a supportive dance community.</p>
-        
-        <h3>Dance Styles and Culture</h3>
-        <p>We teach LA style salsa emphasizing structure, form, respect, and consent. Our cultural focus includes Latin music and dance culture, salsa history, social dancing etiquette, and promoting the idea that anyone can be in the position of a follow or lead. We welcome dancers of all skill levels from complete beginners to advanced performers.</p>
-        
-        <h3>Organization Details</h3>
-        <p>Salsa at Cal is ASUC-sponsored and adheres to ASUC Bylaw 2201, Schedule A. We're a non-profit organization focused on student welfare and community building. Our organization structure includes Executive Committee (President, Vice-President, Directors of Operations, Marketing, and Logistics) and various board positions across Operations, Marketing, and Logistics branches.</p>
-      </div>
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

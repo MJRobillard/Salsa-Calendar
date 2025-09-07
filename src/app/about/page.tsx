@@ -19,6 +19,7 @@ import {
   Award,
   Heart
 } from 'lucide-react';
+import BottomNavigation from '../components/BottomNavigation';
 
 export default function AboutPage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
@@ -39,9 +40,9 @@ export default function AboutPage() {
 
   useEffect(() => {
     if (!loading) {
-      if (!user) {
-        router.push('/');
-      } else if (!hasVisitedLanding) {
+      // Allow both authenticated users and guests to access about page
+      // Only redirect if user is signed in but hasn't visited landing page
+      if (user && !hasVisitedLanding) {
         router.push('/');
       }
     }
@@ -55,37 +56,61 @@ export default function AboutPage() {
     );
   }
 
-  if (!user || !hasVisitedLanding) {
-    return null;
-  }
+  // Remove the redirect for non-authenticated users
+  // Allow guests to access the about page
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
-        isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : 'md:grid-cols-[256px_1fr]'
-      }`}>
-        {/* Sidebar */}
-        <Sidebar 
-          isOpen={isMobileNavOpen} 
-          onToggle={() => setIsMobileNavOpen(false)}
-          isCollapsed={isSidebarCollapsed}
-          onCollapseToggle={toggleSidebar}
-        />
+      <div className="flex w-full overflow-hidden relative z-10">
+        {/* Sidebar - Only show for authenticated users */}
+        {user && (
+          <Sidebar 
+            isOpen={isMobileNavOpen} 
+            onToggle={() => setIsMobileNavOpen(false)}
+            isCollapsed={isSidebarCollapsed}
+            onCollapseToggle={toggleSidebar}
+          />
+        )}
         
         {/* Main Content */}
-        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
-          <TopBar 
-            user={user} 
-            onSidebarToggle={toggleSidebar}
-            isSidebarCollapsed={isSidebarCollapsed}
-            isMobileNavOpen={isMobileNavOpen}
-          />
+        <div className={`flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out ${user ? (isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64') : ''}`}>
+          {user ? (
+            <TopBar 
+              user={user} 
+              onSidebarToggle={toggleSidebar}
+              isSidebarCollapsed={isSidebarCollapsed}
+              isMobileNavOpen={isMobileNavOpen}
+            />
+          ) : (
+            <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-semibold text-brand-gold">About Us</h2>
+                  <p className="text-xs sm:text-sm text-brand-sand">Learn about our community</p>
+                </div>
+                <div className="flex items-center space-x-2 sm:space-x-4 ml-2 flex-shrink-0">
+                  <button
+                    onClick={() => router.push('/')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Back to Home
+                  </button>
+                  <button
+                    onClick={() => router.push('/dashboard')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Dashboard
+                  </button>
+                </div>
+              </div>
+            </header>
+          )}
           
           {/* About Content */}
-          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto w-full">
               {/* Page Header */}
               <div className="mb-8 sm:mb-12">
@@ -364,6 +389,9 @@ We’re a group that loves performing and pushing ourselves through competitions
           </main>
         </div>
       </div>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

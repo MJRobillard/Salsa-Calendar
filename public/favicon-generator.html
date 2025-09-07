@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator for Salsa @ Cal</title>
+</head>
+<body>
+    <h1>Salsa @ Cal Favicon Generator</h1>
+    <p>This file can be used to generate a proper favicon.ico file for the Salsa @ Cal website.</p>
+    
+    <canvas id="faviconCanvas" width="32" height="32" style="border: 1px solid #ccc;"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('faviconCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Create gradient
+        const gradient = ctx.createLinearGradient(0, 0, 32, 32);
+        gradient.addColorStop(0, '#FFD54F');
+        gradient.addColorStop(1, '#FFB300');
+        
+        // Draw background
+        ctx.fillStyle = '#0b1939';
+        ctx.fillRect(0, 0, 32, 32);
+        
+        // Draw rounded corners
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.beginPath();
+        ctx.roundRect(0, 0, 32, 32, 6);
+        ctx.fill();
+        
+        // Reset composite operation
+        ctx.globalCompositeOperation = 'source-over';
+        
+        // Draw "S" letter
+        ctx.fillStyle = gradient;
+        ctx.font = 'bold 18px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('S', 16, 16);
+        
+        // Convert to favicon
+        const link = document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = canvas.toDataURL('image/x-icon');
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</body>
+</html>

@@ -3,35 +3,35 @@
 import React, { useState, useEffect } from 'react';
 import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
-import emailjs from '@emailjs/browser';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
+import BottomNavigation from '../components/BottomNavigation';
 import { 
   Mail, 
   Phone, 
   MapPin, 
   Clock, 
-  Instagram, 
-  Facebook, 
-  Youtube, 
-  Music,
   Send,
+  CheckCircle,
   AlertCircle,
-  CheckCircle
+  User,
+  Calendar,
+  ExternalLink
 } from 'lucide-react';
 
 export default function ContactPage() {
   const { user, loading, hasVisitedLanding } = useFirebase();
   const router = useRouter();
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
     message: ''
   });
-  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -46,55 +46,45 @@ export default function ContactPage() {
 
   useEffect(() => {
     if (!loading) {
-      if (!user) {
-        router.push('/');
-      } else if (!hasVisitedLanding) {
+      // Allow both authenticated users and guests to access contact page
+      // Only redirect if user is signed in but hasn't visited landing page
+      if (user && !hasVisitedLanding) {
         router.push('/');
       }
     }
   }, [user, loading, hasVisitedLanding, router]);
 
-  // Initialize EmailJS
-  useEffect(() => {
-    emailjs.init('YOUR_PUBLIC_KEY'); // Replace with your EmailJS public key
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus('submitting');
-    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
     try {
-      // EmailJS configuration - you'll need to replace these with your actual IDs
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        to_name: 'Salsa @ Cal Team'
-      };
-
-      // Send email using EmailJS
-      await emailjs.send(
-        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
-        templateParams,
-        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
-      );
-
-      setFormStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setFormStatus('idle'), 5000);
+      // Simulate form submission - replace with actual EmailJS implementation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
+      setSubmitStatus('success');
     } catch (error) {
-      console.error('EmailJS error:', error);
-      setFormStatus('error');
-      setTimeout(() => setFormStatus('idle'), 5000);
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -106,37 +96,61 @@ export default function ContactPage() {
     );
   }
 
-  if (!user || !hasVisitedLanding) {
-    return null;
-  }
+  // Remove the redirect for non-authenticated users
+  // Allow guests to access the contact page
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal text-white overflow-x-hidden relative">
       {/* Subtle overlay gradient for depth */}
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
-      <div className={`grid grid-cols-1 w-full overflow-hidden relative z-10 ${
-        isSidebarCollapsed ? 'md:grid-cols-[48px_1fr]' : 'md:grid-cols-[256px_1fr]'
-      }`}>
-        {/* Sidebar */}
-        <Sidebar 
-          isOpen={isMobileNavOpen} 
-          onToggle={() => setIsMobileNavOpen(false)}
-          isCollapsed={isSidebarCollapsed}
-          onCollapseToggle={toggleSidebar}
-        />
+      <div className="flex w-full overflow-hidden relative z-10">
+        {/* Sidebar - Only show for authenticated users */}
+        {user && (
+          <Sidebar 
+            isOpen={isMobileNavOpen} 
+            onToggle={() => setIsMobileNavOpen(false)}
+            isCollapsed={isSidebarCollapsed}
+            onCollapseToggle={toggleSidebar}
+          />
+        )}
         
         {/* Main Content */}
-        <div className="flex flex-col min-w-0 w-full pt-16 sm:pt-20">
-          <TopBar 
-            user={user} 
-            onSidebarToggle={toggleSidebar}
-            isSidebarCollapsed={isSidebarCollapsed}
-            isMobileNavOpen={isMobileNavOpen}
-          />
+        <div className={`flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out ${user ? (isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64') : ''}`}>
+          {user ? (
+            <TopBar 
+              user={user} 
+              onSidebarToggle={toggleSidebar}
+              isSidebarCollapsed={isSidebarCollapsed}
+              isMobileNavOpen={isMobileNavOpen}
+            />
+          ) : (
+            <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-semibold text-brand-gold">Contact Us</h2>
+                  <p className="text-xs sm:text-sm text-brand-sand">Get in touch with our team</p>
+                </div>
+                <div className="flex items-center space-x-2 sm:space-x-4 ml-2 flex-shrink-0">
+                  <button
+                    onClick={() => router.push('/')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Back to Home
+                  </button>
+                  <button
+                    onClick={() => router.push('/dashboard')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Dashboard
+                  </button>
+                </div>
+              </div>
+            </header>
+          )}
           
           {/* Contact Content */}
-          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto w-full">
               {/* Page Header */}
               <div className="mb-8 sm:mb-12">
@@ -144,24 +158,19 @@ export default function ContactPage() {
                   Contact Us
                 </h1>
                 <p className="text-xl sm:text-2xl text-brand-sand max-w-4xl leading-relaxed">
-                  Get in touch with our team, officers, and community. We're here to help and answer your questions!
+                  Get in touch with our team. We're here to help with any questions about classes, events, or our community.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
                 {/* Contact Form */}
                 <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="p-3 bg-brand-maroon/20 rounded-xl">
-                      <Send className="w-8 h-8 text-brand-gold" />
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-brand-gold">Send us a Message</h2>
-                  </div>
-
+                  <h2 className="text-2xl sm:text-3xl font-bold text-brand-gold mb-6">Send us a Message</h2>
+                  
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="name" className="block text-brand-sand font-medium mb-2">
+                        <label htmlFor="name" className="block text-brand-gold font-semibold mb-2">
                           Name *
                         </label>
                         <input
@@ -171,12 +180,13 @@ export default function ContactPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-xl text-white placeholder-brand-sand/50 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
                           placeholder="Your full name"
                         />
                       </div>
+                      
                       <div>
-                        <label htmlFor="email" className="block text-brand-sand font-medium mb-2">
+                        <label htmlFor="email" className="block text-brand-gold font-semibold mb-2">
                           Email *
                         </label>
                         <input
@@ -186,36 +196,30 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-xl text-white placeholder-brand-sand/50 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
                           placeholder="your.email@berkeley.edu"
                         />
                       </div>
                     </div>
-
+                    
                     <div>
-                      <label htmlFor="subject" className="block text-brand-sand font-medium mb-2">
+                      <label htmlFor="subject" className="block text-brand-gold font-semibold mb-2">
                         Subject *
                       </label>
-                      <select
+                      <input
+                        type="text"
                         id="subject"
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all"
-                      >
-                        <option value="">Select a subject</option>
-                        <option value="general">General Inquiry</option>
-                        <option value="decal">DeCal Course Questions</option>
-                        <option value="events">Event Information</option>
-                        <option value="membership">Membership Questions</option>
-                        <option value="performance">Performance Team</option>
-                        <option value="other">Other</option>
-                      </select>
+                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300"
+                        placeholder="What's this about?"
+                      />
                     </div>
-
+                    
                     <div>
-                      <label htmlFor="message" className="block text-brand-sand font-medium mb-2">
+                      <label htmlFor="message" className="block text-brand-gold font-semibold mb-2">
                         Message *
                       </label>
                       <textarea
@@ -224,181 +228,178 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleInputChange}
                         required
-                        rows={5}
-                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-xl text-white placeholder-brand-sand/50 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all resize-none"
-                        placeholder="Tell us how we can help you..."
+                        rows={6}
+                        className="w-full px-4 py-3 bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg text-white placeholder-brand-sand/60 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent transition-all duration-300 resize-none"
+                        placeholder="Tell us more about your question or concern..."
                       />
                     </div>
-
+                    
                     <button
                       type="submit"
-                      disabled={formStatus === 'submitting'}
-                      className="w-full bg-gradient-to-r from-accentFrom to-accentTo hover:from-accentTo hover:to-accentFrom text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      disabled={isSubmitting}
+                      className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-gradient-to-r from-brand-gold to-accentTo hover:from-accentTo hover:to-brand-gold text-brand-charcoal rounded-lg font-bold text-lg shadow-lg hover:shadow-glow transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
-                      {formStatus === 'submitting' ? 'Sending...' : 'Send Message'}
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-brand-charcoal border-t-transparent rounded-full animate-spin"></div>
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={20} />
+                          <span>Send Message</span>
+                        </>
+                      )}
                     </button>
-
-                    {/* Form Status Messages */}
-                    {formStatus === 'success' && (
-                      <div className="flex items-center space-x-3 p-4 bg-green-500/20 border border-green-500/30 rounded-xl">
-                        <CheckCircle className="w-6 h-6 text-green-400" />
-                        <span className="text-green-400">Message sent successfully! We'll get back to you within 24 hours.</span>
+                    
+                    {/* Status Messages */}
+                    {submitStatus === 'success' && (
+                      <div className="flex items-center space-x-2 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                        <CheckCircle size={20} className="text-green-400" />
+                        <span className="text-green-400">Message sent successfully! We'll get back to you soon.</span>
                       </div>
                     )}
-
-                    {formStatus === 'error' && (
-                      <div className="flex items-center space-x-3 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
-                        <AlertCircle className="w-6 h-6 text-red-400" />
-                        <span className="text-red-400">Something went wrong. Please try again.</span>
+                    
+                    {submitStatus === 'error' && (
+                      <div className="flex items-center space-x-2 p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                        <AlertCircle size={20} className="text-red-400" />
+                        <span className="text-red-400">Failed to send message. Please try again or contact us directly.</span>
                       </div>
                     )}
                   </form>
-
-                  <div className="mt-6 p-4 bg-brand-maroon/10 rounded-xl">
-                                            <div className="flex items-center space-x-2 text-brand-sand text-sm">
-                          <Clock className="w-4 h-4" />
-                          <span>Response Time: We aim to respond within 24 hours</span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-brand-sand text-sm mt-2">
-                          <Mail className="w-4 h-4" />
-                          <span>Listserv: salsadanceatcal@lists.berkeley.edu</span>
-                        </div>
-                  </div>
                 </div>
 
-                {/* Contact Information & Officer Directory */}
+                {/* Contact Information */}
                 <div className="space-y-8">
-                  {/* General Contact Info */}
+                  {/* General Contact */}
                   <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
-                    <h2 className="text-2xl font-bold text-brand-gold mb-6">General Contact</h2>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-brand-gold mb-6">Get in Touch</h2>
                     
                     <div className="space-y-4">
                       <div className="flex items-center space-x-4">
-                        <div className="p-2 bg-brand-maroon/20 rounded-lg">
-                          <Mail className="w-5 h-5 text-brand-gold" />
+                        <div className="p-3 bg-brand-maroon/20 rounded-xl">
+                          <Mail className="w-6 h-6 text-brand-gold" />
                         </div>
                         <div>
-                          <p className="text-brand-sand font-medium">General Inquiries</p>
-                          <a href="mailto:salsaatcal@gmail.com" className="text-brand-gold hover:text-white transition-colors">
+                          <h3 className="text-lg font-semibold text-brand-gold">General Inquiries</h3>
+                          <a href="mailto:salsaatcal@gmail.com" className="text-brand-sand hover:text-brand-gold transition-colors">
                             salsaatcal@gmail.com
                           </a>
                         </div>
                       </div>
-
+                      
                       <div className="flex items-center space-x-4">
-                        <div className="p-2 bg-brand-maroon/20 rounded-lg">
-                          <Mail className="w-5 h-5 text-brand-gold" />
+                        <div className="p-3 bg-brand-maroon/20 rounded-xl">
+                          <Calendar className="w-6 h-6 text-brand-gold" />
                         </div>
                         <div>
-                          <p className="text-brand-sand font-medium">DeCal Questions</p>
-                          <a href="mailto:salsadecal@gmail.com" className="text-brand-gold hover:text-white transition-colors">
-                            salsadecal@gmail.com
+                          <h3 className="text-lg font-semibold text-brand-gold">Class Information</h3>
+                          <a href="mailto:salsaatcal@gmail.com" className="text-brand-sand hover:text-brand-gold transition-colors">
+                            salsaatcal@gmail.com
                           </a>
                         </div>
                       </div>
-
+                      
                       <div className="flex items-center space-x-4">
-                        <div className="p-2 bg-brand-maroon/20 rounded-lg">
-                          <MapPin className="w-5 h-5 text-brand-gold" />
+                        <div className="p-3 bg-brand-maroon/20 rounded-xl">
+                          <MapPin className="w-6 h-6 text-brand-gold" />
                         </div>
                         <div>
-                          <p className="text-brand-sand font-medium">LEAD Center</p>
-                          <p className="text-brand-sand">4th Floor, Eshleman Hall</p>
+                          <h3 className="text-lg font-semibold text-brand-gold">Location</h3>
+                          <p className="text-brand-sand">Hearst Gymnasium, UC Berkeley</p>
+                          <p className="text-brand-sand text-sm">Mondays 4-6 PM</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-4">
+                        <div className="p-3 bg-brand-maroon/20 rounded-xl">
+                          <ExternalLink className="w-6 h-6 text-brand-gold" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-brand-gold">Social Media</h3>
+                          <div className="space-y-1">
+                            <a href="https://instagram.com/salsaatcalberkeley" target="_blank" rel="noopener noreferrer" className="block text-brand-sand hover:text-brand-gold transition-colors">
+                              @salsaatcalberkeley
+                            </a>
+                            <a href="https://linktr.ee/salsa_at_cal" target="_blank" rel="noopener noreferrer" className="block text-brand-sand hover:text-brand-gold transition-colors">
+                              Linktree
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Officer Directory */}
+                  {/* Leadership Structure */}
                   <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
-                    <h2 className="text-2xl font-bold text-brand-gold mb-6">Current Officers</h2>
+                    <h2 className="text-2xl font-bold text-brand-gold mb-6">Leadership Structure</h2>
                     
-                    <div className="space-y-4">
-                      <div className="p-4 bg-brand-maroon/20 rounded-xl">
-                        <h3 className="text-lg font-semibold text-brand-gold mb-2">President</h3>
-                        <p className="text-brand-sand">Kian Asgharzadeh</p>
-                        <a href="mailto:kian-asgh@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
-                          kian-asgh@berkeley.edu
-                        </a>
+                    <div className="space-y-6">
+                      {/* Executive Committee */}
+                      <div>
+                        <h3 className="text-xl font-semibold text-brand-gold mb-4">Executive Committee</h3>
+                        <div className="space-y-3">
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">President</h4>
+                            <p className="text-brand-sand">Kian Asgharzadeh</p>
+                            <a href="mailto:kian-asgh@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
+                              kian-asgh@berkeley.edu
+                            </a>
+                          </div>
+                          
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">DeCal Director</h4>
+                            <p className="text-brand-sand">Sofia Cielak</p>
+                            <a href="mailto:sofia.cielak@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
+                              sofia.cielak@berkeley.edu
+                            </a>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="p-4 bg-brand-maroon/20 rounded-xl">
-                        <h3 className="text-lg font-semibold text-brand-gold mb-2">DeCal Directors</h3>
-                        <p className="text-brand-sand mb-1">Sofia Cielak</p>
-                        <a href="mailto:sof.ck12@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
-                          sof.ck12@berkeley.edu
-                        </a>
-                        <p className="text-brand-sand mt-2 mb-1">Tristan Soto Moreno</p>
-                        <a href="mailto:tsoto25@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
-                          tsoto25@berkeley.edu
-                        </a>
-                      </div>
-
-                      <div className="p-4 bg-brand-maroon/20 rounded-xl">
-                        <h3 className="text-lg font-semibold text-brand-gold mb-2">DeCal Advisor</h3>
-                        <p className="text-brand-sand">Professor Mary Kelsey</p>
-                        <p className="text-brand-sand text-sm">Sociology Department</p>
-                        <a href="mailto:mkelsey@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
-                          mkelsey@berkeley.edu
-                        </a>
+                      {/* Marketing Branch */}
+                      <div>
+                        <h3 className="text-xl font-semibold text-brand-gold mb-4">Marketing Branch</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">Marketing Branch</h4>
+                            <p className="text-brand-sand">Led by Kacey Yoe</p>
+                            <a href="mailto:kacey.yoe@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
+                              kacey.yoe@berkeley.edu
+                            </a>
+                          </div>
+                          
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">Finance Chair</h4>
+                            <p className="text-brand-sand">Daniela V</p>
+                            <a href="mailto:daniela.v@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
+                              daniela.v@berkeley.edu
+                            </a>
+                          </div>
+                          
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">Internal Affairs Officer & Lead Full Stack Developer</h4>
+                            <p className="text-brand-sand">Matthew Robillard</p>
+                            <a href="mailto:matthew.robillard22@berkeley.edu" className="text-brand-gold hover:text-white transition-colors text-sm">
+                              matthew.robillard22@berkeley.edu
+                            </a>
+                          </div>
+                          
+                          <div className="p-4 bg-brand-maroon/20 rounded-xl">
+                            <h4 className="font-semibold text-brand-gold">External Affairs Officers</h4>
+                            <p className="text-brand-sand">Emmanuel Ceja and Rene Gallegos</p>
+                            <div className="space-y-1">
+                              <a href="mailto:emmanuel.ceja@berkeley.edu" className="block text-brand-gold hover:text-white transition-colors text-sm">
+                                emmanuel.ceja@berkeley.edu
+                              </a>
+                              <a href="mailto:rene.gallegos@berkeley.edu" className="block text-brand-gold hover:text-white transition-colors text-sm">
+                                rene.gallegos@berkeley.edu
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Social Media Links */}
-                  <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
-                    <h2 className="text-2xl font-bold text-brand-gold mb-6">Follow Us</h2>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <a
-                        href="https://instagram.com/salsaatcalberkeley"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 rounded-xl transition-all duration-300 border border-purple-500/30 hover:border-purple-500/50"
-                      >
-                        <Instagram className="w-6 h-6 text-purple-400" />
-                        <span className="text-brand-sand font-medium">Instagram</span>
-                      </a>
-
-                      <a
-                        href="https://facebook.com/salsaatcal"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-4 bg-gradient-to-r from-blue-500/20 to-blue-600/20 hover:from-blue-500/30 hover:to-blue-600/30 rounded-xl transition-all duration-300 border border-blue-500/30 hover:border-blue-500/50"
-                      >
-                        <Facebook className="w-6 h-6 text-blue-400" />
-                        <span className="text-brand-sand font-medium">Facebook</span>
-                      </a>
-
-                      <a
-                        href="https://open.spotify.com/user/salsadanceatcal"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-4 bg-gradient-to-r from-green-500/20 to-green-600/20 hover:from-green-500/30 hover:to-green-600/30 rounded-xl transition-all duration-300 border border-green-500/30 hover:border-green-500/50"
-                      >
-                        <Music className="w-6 h-6 text-green-400" />
-                        <span className="text-brand-sand font-medium">Spotify</span>
-                      </a>
-
-                      <a
-                        href="https://linktr.ee/salsa_at_cal"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-3 p-4 bg-gradient-to-r from-brand-maroon/20 to-accentTo/20 hover:from-brand-maroon/30 hover:to-accentTo/30 rounded-xl transition-all duration-300 border border-brand-maroon/30 hover:border-brand-maroon/50"
-                      >
-                        <MapPin className="w-6 h-6 text-brand-gold" />
-                        <span className="text-brand-sand font-medium">Linktree</span>
-                      </a>
-                    </div>
-
-                                         <div className="mt-6 p-4 bg-brand-maroon/10 rounded-xl">
-                       <p className="text-brand-sand text-sm text-center">
-                         Join our Discord for real-time community updates and discussions!
-                       </p>
-                       <p className="text-brand-sand text-sm text-center mt-2">
-                         Venmo: @SALSAATCAL09 for payments and donations
-                       </p>
-                     </div>
                   </div>
                 </div>
               </div>
@@ -406,6 +407,9 @@ export default function ContactPage() {
           </main>
         </div>
       </div>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

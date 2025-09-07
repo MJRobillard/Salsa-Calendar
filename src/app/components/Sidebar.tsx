@@ -14,6 +14,7 @@ import {
   Settings,
   User,
   Heart,
+  Users,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -35,6 +36,7 @@ const sidebarItems: SidebarItem[] = [
   { icon: <Home size={20} />, label: 'Dashboard', href: '/dashboard' },
   { icon: <Calendar size={20} />, label: 'Events', href: '/events' },
   { icon: <ImageIcon size={20} />, label: 'Media', href: '/media' },
+  { icon: <Users size={20} />, label: 'Network', href: '/network' },
   { icon: <Info size={20} />, label: 'About', href: '/about' },
   { icon: <Heart size={20} />, label: 'Donate', href: '/donate' },
   { icon: <Mail size={20} />, label: 'Contact', href: '/contact' },

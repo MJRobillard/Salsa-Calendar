@@ -5,6 +5,7 @@ import { useFirebase } from '../contexts/FirebaseContext';
 import { useRouter } from 'next/navigation';
 import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
+import BottomNavigation from '../components/BottomNavigation';
 import { Heart, DollarSign, ArrowRight } from 'lucide-react';
 
 export default function DonatePage() {
@@ -26,9 +27,9 @@ export default function DonatePage() {
 
   useEffect(() => {
     if (!loading) {
-      if (!user) {
-        router.push('/');
-      } else if (!hasVisitedLanding) {
+      // Allow both authenticated users and guests to access donate page
+      // Only redirect if user is signed in but hasn't visited landing page
+      if (user && !hasVisitedLanding) {
         router.push('/');
       }
     }
@@ -42,9 +43,8 @@ export default function DonatePage() {
     );
   }
 
-  if (!user || !hasVisitedLanding) {
-    return null;
-  }
+  // Remove the redirect for non-authenticated users
+  // Allow guests to access the donate page
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] text-white overflow-x-hidden relative">
@@ -52,25 +52,52 @@ export default function DonatePage() {
       <div className="absolute inset-0 bg-gradient-to-tr from-brand-maroon/5 via-transparent to-brand-gold/5 pointer-events-none"></div>
       
       <div className="flex w-full overflow-hidden relative z-10">
-        {/* Sidebar */}
-        <Sidebar 
-          isOpen={isMobileNavOpen} 
-          onToggle={() => setIsMobileNavOpen(false)}
-          isCollapsed={isSidebarCollapsed}
-          onCollapseToggle={toggleSidebar}
-        />
+        {/* Sidebar - Only show for authenticated users */}
+        {user && (
+          <Sidebar 
+            isOpen={isMobileNavOpen} 
+            onToggle={() => setIsMobileNavOpen(false)}
+            isCollapsed={isSidebarCollapsed}
+            onCollapseToggle={toggleSidebar}
+          />
+        )}
         
         {/* Main Content */}
-        <div className="flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out">
-          <TopBar 
-            user={user} 
-            onSidebarToggle={toggleSidebar}
-            isSidebarCollapsed={isSidebarCollapsed}
-            isMobileNavOpen={isMobileNavOpen}
-          />
+        <div className={`flex flex-col min-w-0 w-full pt-topbar transition-all duration-300 ease-in-out ${user ? (isSidebarCollapsed ? 'md:ml-0' : 'md:ml-64') : ''}`}>
+          {user ? (
+            <TopBar 
+              user={user} 
+              onSidebarToggle={toggleSidebar}
+              isSidebarCollapsed={isSidebarCollapsed}
+              isMobileNavOpen={isMobileNavOpen}
+            />
+          ) : (
+            <header className="bg-brand-charcoal border-b border-brand-maroon px-3 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between min-w-0">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-xl font-semibold text-brand-gold">Donate</h2>
+                  <p className="text-xs sm:text-sm text-brand-sand">Support our community</p>
+                </div>
+                <div className="flex items-center space-x-2 sm:space-x-4 ml-2 flex-shrink-0">
+                  <button
+                    onClick={() => router.push('/')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Back to Home
+                  </button>
+                  <button
+                    onClick={() => router.push('/dashboard')}
+                    className="px-2 sm:px-4 py-2 text-brand-sand hover:text-brand-gold transition-colors text-sm sm:text-base"
+                  >
+                    Dashboard
+                  </button>
+                </div>
+              </div>
+            </header>
+          )}
           
           {/* Donate Content */}
-          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden pb-20 md:pb-6">
             <div className="max-w-6xl mx-auto w-full">
               {/* Page Header */}
               <div className="mb-8 sm:mb-12">
@@ -205,6 +232,9 @@ export default function DonatePage() {
           </main>
         </div>
       </div>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

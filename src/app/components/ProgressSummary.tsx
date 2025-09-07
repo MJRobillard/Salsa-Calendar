@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus, Target } from 'lucide-react';
+import ProgressiveAuth from './ProgressiveAuth';
 
 interface StyleData {
   sessions: number;
@@ -60,7 +61,11 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold">
+    <ProgressiveAuth
+      feature="Progress Tracking"
+      description="Track your dance progress, sessions, and skill development over time"
+      className="bg-gradient-to-br from-[#000000] via-[#0b1939] to-[#000000] p-4 sm:p-6 rounded-xl2 shadow-card border border-brand-gold"
+    >
       <div className="flex items-center space-x-2 mb-4 sm:mb-6">
         <Target size={20} className="sm:w-6 sm:h-6 text-brand-gold" />
         <h3 className="text-lg sm:text-xl font-semibold text-brand-gold">Progress Summary</h3>
@@ -161,6 +166,6 @@ export default function ProgressSummary({ styles, data }: ProgressSummaryProps) 
           }, 0)} total sessions this week
         </p>
       </div>
-    </div>
+    </ProgressiveAuth>
   );
 }

@@ -7,6 +7,7 @@ import Sidebar from '../components/Sidebar';
 import TopBar from '../components/TopBar';
 import SalsaCalEvents from '../components/SalsaCalEvents';
 import EventHistory from '../components/EventHistory';
+import BottomNavigation from '../components/BottomNavigation';
 import { Calendar, MapPin, Clock, CheckCircle, XCircle, HelpCircle, ExternalLink, User, LogIn } from 'lucide-react';
 
 interface SalsaEvent {
@@ -134,7 +135,7 @@ export default function EventsPage() {
           )}
           
           {/* Events Content */}
-          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden pb-20 md:pb-6">
             <div className="max-w-7xl mx-auto w-full">
               {/* Page Header */}
               <div className="mb-6 sm:mb-8 w-full">
@@ -146,15 +147,15 @@ export default function EventsPage() {
                   }
                 </p>
                 
-                {/* Guest User Prompt */}
+                {/* Guest User Info */}
                 {!user && (
-                  <div className="mt-4 p-3 sm:p-4 bg-brand-maroon/20 border border-brand-maroon rounded-lg">
+                  <div className="mt-4 p-3 sm:p-4 bg-brand-maroon/10 border border-brand-maroon/40 rounded-lg">
                     <div className="flex items-center space-x-3">
                       <User size={18} className="text-brand-gold flex-shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <p className="text-brand-gold font-medium text-sm sm:text-base">Guest User</p>
+                        <p className="text-brand-gold font-medium text-sm sm:text-base">Welcome, Guest!</p>
                         <p className="text-brand-sand text-xs sm:text-sm">
-                          Sign in to RSVP for events, track your progress, and access the full dashboard.
+                          Browse events freely. Sign in to RSVP, track progress, and access your personal dashboard.
                         </p>
                       </div>
                     </div>
@@ -186,23 +187,34 @@ export default function EventsPage() {
 
               {/* Guest User CTA */}
               {!user && (
-                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-tr from-accentFrom/20 to-accentTo/20 border border-brand-maroon rounded-xl2 text-center w-full">
-                  <h3 className="text-xl sm:text-2xl font-bold text-brand-gold mb-3">Ready to Join?</h3>
+                <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gradient-to-tr from-accentFrom/10 to-accentTo/10 border border-brand-maroon/40 rounded-xl2 text-center w-full">
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-gold mb-3">Want More Features?</h3>
                   <p className="text-brand-sand mb-4 sm:mb-6 text-sm sm:text-base">
-                    Sign in to access your personalized dashboard, RSVP for events, and track your dance progress!
+                    Sign in to RSVP for events, track your dance progress, and access your personal dashboard!
                   </p>
-                  <button
-                    onClick={signIn}
-                    className="bg-gradient-to-tr from-accentFrom to-accentTo text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl2 font-semibold text-base sm:text-lg shadow-card hover:shadow-glow transition-all duration-300"
-                  >
-                    Sign In with Google
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button
+                      onClick={signIn}
+                      className="bg-gradient-to-tr from-accentFrom to-accentTo text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl2 font-semibold text-base sm:text-lg shadow-card hover:shadow-glow transition-all duration-300"
+                    >
+                      Sign In with Google
+                    </button>
+                    <a
+                      href="/dashboard"
+                      className="bg-gradient-to-tr from-brand-maroon/20 to-brand-maroon/40 text-brand-gold px-6 sm:px-8 py-3 sm:py-4 rounded-xl2 font-semibold text-base sm:text-lg border border-brand-gold/40 hover:border-brand-gold/60 transition-all duration-300"
+                    >
+                      Explore Dashboard
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
           </main>
         </div>
       </div>
+      
+      {/* Bottom Navigation for Mobile */}
+      <BottomNavigation />
     </div>
   );
 }

@@ -10,6 +10,9 @@ interface Event {
   start: Date;
   location: string;
   type: 'lesson' | 'social' | 'performance';
+  description?: string;
+  metaTag?: string;
+  meta?: string;
 }
 
 interface NextEventCardProps {
@@ -94,6 +97,25 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
     return type.charAt(0).toUpperCase() + type.slice(1);
   };
 
+  const extractMetaFromTitle = (title: string): string | undefined => {
+    if (!title) return undefined;
+    const match = title.match(/^([A-Za-z0-9&-]+):/);
+    return match?.[1] || undefined;
+  };
+
+  const extractMetaTag = (description?: string): string | undefined => {
+    if (!description) return undefined;
+    const lines = description
+      .split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+    if (lines.length < 2) return undefined;
+    const secondLine = lines[1];
+    const match = secondLine.match(/^[^\s.,;:!?#()\[\]{}\-_/]+/);
+    const firstWord = match?.[0];
+    return firstWord || undefined;
+  };
+
   const openEventInGoogleCalendar = (event: Event) => {
     // Create a Google Calendar event creation URL
     const startDate = event.start.toISOString().slice(0, 16).replace(/:/g, '');
@@ -147,9 +169,16 @@ export default function NextEventCard({ event, rsvpStatus, onRSVP }: NextEventCa
             </div>
           </Link>
           
-          <span className={`px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 ${getEventTypeColor(event.type)} self-start sm:self-auto flex-shrink-0`}>
-            {getEventTypeLabel(event.type)}
-          </span>
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium bg-brand-maroon/20 ${getEventTypeColor(event.type)}`}>
+              {getEventTypeLabel(event.type)}
+            </span>
+            {(event.meta || event.metaTag || extractMetaFromTitle(event.title) || extractMetaTag(event.description)) && (
+              <span className="px-3 py-1 rounded-full text-sm font-medium border border-brand-gold text-brand-gold bg-brand-maroon/10">
+                {event.meta || event.metaTag || extractMetaFromTitle(event.title) || extractMetaTag(event.description)}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* RSVP Section */}
