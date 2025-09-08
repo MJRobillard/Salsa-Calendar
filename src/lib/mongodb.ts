@@ -1,7 +1,9 @@
 import { MongoClient, Db } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
-  throw new Error('Please add your MongoDB URI to .env.local');
+  throw new Error(
+    'MONGODB_URI is not set. Create a .env.local with MONGODB_URI (and optional MONGODB_DB). See MONGODB_SETUP.md.'
+  );
 }
 
 const uri = process.env.MONGODB_URI;
@@ -34,5 +36,6 @@ export default clientPromise;
 
 export async function getDatabase(): Promise<Db> {
   const client = await clientPromise;
-  return client.db('salsa-calendar');
+  const dbName = process.env.MONGODB_DB || 'salsa-calendar';
+  return client.db(dbName);
 }

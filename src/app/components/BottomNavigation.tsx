@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Calendar, Image as ImageIcon, User, Mail, Heart, Settings, Users } from 'lucide-react';
+import { Home, Calendar, Image as ImageIcon, User, Mail, Heart, Settings, Users, GraduationCap } from 'lucide-react';
 import { useFirebase } from '../contexts/FirebaseContext';
 
 interface BottomNavItemProps {
@@ -69,7 +69,7 @@ export default function BottomNavigation() {
   const navItems = [
     { icon: <Home size={18} />, label: 'Home', href: '/' },
     { icon: <Calendar size={18} />, label: 'Events', href: '/events' },
-    { icon: <ImageIcon size={18} />, label: 'Media', href: '/media' },
+    { icon: <GraduationCap size={18} />, label: 'Learn', href: '/media' },
     { 
       icon: <Users size={18} />, 
       label: 'Network', 

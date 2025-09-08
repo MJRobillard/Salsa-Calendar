@@ -16,16 +16,23 @@ export async function GET(request: NextRequest) {
 
     const db = await getDatabase();
     
-    // Fetch event history for the user
-    const eventHistory = await db.collection('eventHistory')
+    // Fetch event history for the user using new check-in schema
+    const docs = await db.collection('eventHistory')
       .find({ userId })
-      .sort({ date: -1 })
+      .sort({ checkedInAt: -1, eventDate: -1 })
       .limit(50)
       .toArray();
-    
-    return NextResponse.json({
-      eventHistory: eventHistory || []
-    });
+
+    // Serialize dates and ids for client safety
+    const eventHistory = (docs || []).map((doc: any) => ({
+      id: doc._id ? String(doc._id) : undefined,
+      eventId: doc.eventId ?? doc.event_id ?? '',
+      eventDate: doc.eventDate ?? doc.date ?? '',
+      checkedInAt: doc.checkedInAt instanceof Date ? doc.checkedInAt.toISOString() : doc.checkedInAt,
+      source: doc.source || 'qr',
+    }));
+
+    return NextResponse.json({ eventHistory });
 
   } catch (error) {
     console.error('Error fetching event history:', error);

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mongo:ping": "node scripts/mongo-ping.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

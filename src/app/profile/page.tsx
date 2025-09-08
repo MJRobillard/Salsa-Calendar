@@ -31,10 +31,12 @@ export default function ProfilePage() {
   const { user, signOut, loading } = useFirebase();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [lastScanTime, setLastScanTime] = useState<string | null>(null);
+  const [saveNotice, setSaveNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Profile data from MongoDB
   const [profileData, setProfileData] = useState({
@@ -43,6 +45,10 @@ export default function ProfilePage() {
     phone: '',
     location: '',
     bio: '',
+    dancePreferences: {
+      Salsa: { role: 'none' },
+      Bachata: { role: 'none' }
+    },
     joinDate: '',
     lastSignIn: '',
     emailVerified: user?.emailVerified || false,
@@ -67,7 +73,20 @@ export default function ProfilePage() {
       
       try {
         setLoadingProfile(true);
-        const response = await fetch('/api/profile', {
+        // Connectivity check (logs only)
+        try {
+          const pingRes = await fetch(`/api/mongo/ping`, {
+            headers: {
+              'Authorization': `Bearer ${await user.getIdToken()}`,
+            },
+          });
+          const pingJson = await pingRes.json().catch(() => null);
+          console.log('[CLIENT][MONGO][PING]', pingRes.status, pingJson);
+        } catch (e) {
+          console.warn('[CLIENT][MONGO][PING] Failed to call ping endpoint', e);
+        }
+
+        const response = await fetch(`/api/profile`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${await user.getIdToken()}`,
@@ -82,20 +101,23 @@ export default function ProfilePage() {
             ...data,
             displayName: data.displayName || user.displayName || '',
             email: data.email || user.email || '',
-            emailVerified: data.emailVerified || user.emailVerified || false
+            emailVerified: data.emailVerified || user.emailVerified || false,
+            dancePreferences: data.dancePreferences || prev.dancePreferences
           }));
           setEditData(prev => ({
             ...prev,
             ...data,
             displayName: data.displayName || user.displayName || '',
             email: data.email || user.email || '',
-            emailVerified: data.emailVerified || user.emailVerified || false
+            emailVerified: data.emailVerified || user.emailVerified || false,
+            dancePreferences: data.dancePreferences || prev.dancePreferences
           }));
         } else {
-          console.error('Failed to fetch profile data');
+          const text = await response.text().catch(() => '');
+          console.error('[CLIENT][PROFILE][GET] Failed to fetch profile data', response.status, text);
         }
       } catch (error) {
-        console.error('Error fetching profile data:', error);
+        console.error('[CLIENT][PROFILE][GET] Error fetching profile data:', error);
       } finally {
         setLoadingProfile(false);
       }
@@ -103,6 +125,13 @@ export default function ProfilePage() {
 
     fetchProfileData();
   }, [user]);
+
+  // Auto-clear save notice after a short delay
+  useEffect(() => {
+    if (!saveNotice) return;
+    const timer = setTimeout(() => setSaveNotice(null), 3000);
+    return () => clearTimeout(timer);
+  }, [saveNotice]);
 
   // Unified sidebar toggle function
   const toggleSidebar = () => {
@@ -116,29 +145,75 @@ export default function ProfilePage() {
   };
 
   const handleEdit = () => {
-    setEditData(profileData);
+    // Ensure defaults exist when entering edit mode
+    setEditData({
+      ...profileData,
+      dancePreferences: profileData.dancePreferences || {
+        Salsa: { role: 'none' },
+        Bachata: { role: 'none' }
+      }
+    });
     setIsEditing(true);
   };
 
   const handleSave = async () => {
     try {
-      const response = await fetch('/api/profile', {
+      if (!user) return;
+      setIsSaving(true);
+      setSaveNotice(null);
+      const payload = {
+        displayName: editData.displayName,
+        phone: editData.phone,
+        location: editData.location,
+        bio: editData.bio,
+        dancePreferences: editData.dancePreferences
+      };
+
+      console.log('[CLIENT][PROFILE][PUT] Sending payload', payload);
+      const response = await fetch(`/api/profile`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${await user?.getIdToken()}`,
+          'Authorization': `Bearer ${await user.getIdToken()}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(editData),
+        body: JSON.stringify(payload),
       });
       
       if (response.ok) {
-        setProfileData(editData);
+        console.log('[CLIENT][PROFILE][PUT] Success');
+        const refreshed = await fetch(`/api/profile`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${await user.getIdToken()}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        if (refreshed.ok) {
+          const data = await refreshed.json();
+          console.log('[CLIENT][PROFILE][GET] Refreshed profile', data);
+          setProfileData(prev => ({
+            ...prev,
+            ...data,
+            displayName: data.displayName || prev.displayName,
+            email: data.email || prev.email,
+            emailVerified: data.emailVerified ?? prev.emailVerified,
+            dancePreferences: data.dancePreferences || prev.dancePreferences
+          }));
+          setEditData(prev => ({ ...prev, ...data }));
+        }
+        setSaveNotice({ type: 'success', message: 'Profile saved successfully.' });
         setIsEditing(false);
       } else {
-        console.error('Failed to save profile data');
+        const errText = await response.text().catch(() => '');
+        console.error('[CLIENT][PROFILE][PUT] Failed', errText);
+        setSaveNotice({ type: 'error', message: 'Failed to save profile. Please try again.' });
       }
     } catch (error) {
-      console.error('Error saving profile data:', error);
+      console.error('[CLIENT][PROFILE][PUT] Error', error);
+      setSaveNotice({ type: 'error', message: 'An unexpected error occurred while saving.' });
+    }
+    finally {
+      setIsSaving(false);
     }
   };
 
@@ -210,6 +285,11 @@ export default function ProfilePage() {
                 {/* Main Profile Card */}
                 <div className="lg:col-span-2">
                   <div className="bg-gradient-to-br from-brand-charcoal via-brand-paper to-brand-charcoal p-6 sm:p-8 rounded-2xl shadow-card border border-brand-maroon/30">
+                    {saveNotice && (
+                      <div className={`mb-4 p-3 rounded-lg border ${saveNotice.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-red-500/10 border-red-500/30 text-red-400'}`}>
+                        {saveNotice.message}
+                      </div>
+                    )}
                     {/* Profile Header */}
                     <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6">
                       {/* Profile Picture */}
@@ -218,7 +298,7 @@ export default function ProfilePage() {
                           {profileData.displayName.charAt(0).toUpperCase()}
                         </div>
                         {!isEditing && (
-                          <button className="absolute bottom-0 right-0 bg-brand-gold text-brand-charcoal p-2 rounded-full hover:bg-brand-gold/80 transition-colors shadow-lg">
+                          <button onClick={handleEdit} className="absolute bottom-0 right-0 bg-brand-gold text-brand-charcoal p-2 rounded-full hover:bg-brand-gold/80 transition-colors shadow-lg">
                             <Edit3 size={16} />
                           </button>
                         )}
@@ -239,16 +319,7 @@ export default function ProfilePage() {
                           )}
                         </h2>
                         <p className="text-brand-sand text-sm sm:text-base">
-                          {isEditing ? (
-                            <input
-                              type="email"
-                              value={editData.email}
-                              onChange={(e) => setEditData({...editData, email: e.target.value})}
-                              className="bg-brand-charcoal/50 border border-brand-maroon/30 rounded-lg px-3 py-2 text-brand-sand w-full"
-                            />
-                          ) : (
-                            profileData.email
-                          )}
+                          {profileData.email}
                         </p>
                       </div>
 
@@ -258,10 +329,11 @@ export default function ProfilePage() {
                           <>
                             <button
                               onClick={handleSave}
-                              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-brand-gold to-accentTo text-brand-charcoal rounded-lg hover:shadow-glow transition-all duration-300"
+                              disabled={isSaving}
+                              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${isSaving ? 'opacity-60 cursor-not-allowed bg-brand-gold/60 text-brand-charcoal' : 'bg-gradient-to-r from-brand-gold to-accentTo text-brand-charcoal hover:shadow-glow'}`}
                             >
                               <Save size={16} />
-                              <span>Save</span>
+                              <span>{isSaving ? 'Saving…' : 'Save'}</span>
                             </button>
                             <button
                               onClick={handleCancel}
@@ -333,6 +405,49 @@ export default function ProfilePage() {
                         ) : (
                           <p className="text-brand-sand">{profileData.bio}</p>
                         )}
+                      </div>
+
+                      {/* Dance Preferences */}
+                      <div>
+                        <label className="block text-brand-gold font-semibold mb-2">Dance Preferences</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          {(['Salsa','Bachata'] as const).map((style) => {
+                            const current = (isEditing ? editData : profileData).dancePreferences?.[style]?.role || 'none';
+                            const roles = [
+                              { key: 'none', label: 'No preference' },
+                              { key: 'leader', label: 'Leader' },
+                              { key: 'follower', label: 'Follower' },
+                              { key: 'both', label: 'Both' }
+                            ] as const;
+                            return (
+                              <div key={style} className="bg-brand-charcoal/40 border border-brand-maroon/30 rounded-lg p-3">
+                                <div className="text-brand-gold font-semibold mb-3">{style}</div>
+                                {isEditing ? (
+                                  <div className="flex flex-wrap gap-2">
+                                    {roles.map(r => (
+                                      <button
+                                        key={r.key}
+                                        type="button"
+                                        onClick={() => setEditData({
+                                          ...editData,
+                                          dancePreferences: {
+                                            ...editData.dancePreferences,
+                                            [style]: { role: r.key }
+                                          }
+                                        })}
+                                        className={`px-3 py-2 rounded-full text-sm border transition-all ${current === r.key ? 'bg-brand-gold text-brand-charcoal border-brand-gold shadow-glow' : 'bg-brand-charcoal/60 text-brand-sand border-brand-maroon/40 hover:bg-brand-charcoal/80'}`}
+                                      >
+                                        {r.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div className="text-brand-sand capitalize">{current}</div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
 
                       {isEditing && (
@@ -428,8 +543,17 @@ export default function ProfilePage() {
                       <div>
                         <span className="text-brand-sand">Email Verified:</span>
                         <div className="flex items-center space-x-2">
-                          <CheckCircle size={16} className="text-green-400" />
-                          <span className="text-green-400 font-semibold">Verified</span>
+                          {profileData.emailVerified ? (
+                            <>
+                              <CheckCircle size={16} className="text-green-400" />
+                              <span className="text-green-400 font-semibold">Verified</span>
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle size={16} className="text-yellow-400" />
+                              <span className="text-yellow-400 font-semibold">Not verified</span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
