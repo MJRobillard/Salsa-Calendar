@@ -70,17 +70,17 @@ export default function BottomNavigation() {
     { icon: <Home size={18} />, label: 'Home', href: '/' },
     { icon: <Calendar size={18} />, label: 'Events', href: '/events' },
     { icon: <GraduationCap size={18} />, label: 'Learn', href: '/media' },
-    { 
-      icon: <Users size={18} />, 
-      label: 'Network', 
-      href: '#',
-      onClick: handleNetworkClick
+    {
+      icon: <Users size={18} />,
+      label: 'Network',
+      href: '/network',
+      onClick: user ? undefined : handleNetworkClick,
     },
-    { 
-      icon: <User size={18} />, 
-      label: 'Profile', 
-      href: '#',
-      onClick: handleProfileClick
+    {
+      icon: <User size={18} />,
+      label: 'Profile',
+      href: '/profile',
+      onClick: user ? undefined : handleProfileClick,
     },
     { icon: <Mail size={18} />, label: 'Contact', href: '/contact' },
   ];
